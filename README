@@ -1,0 +1,13 @@
+This is the home of s2e - the step 2 labs javascrip text editor
+
+I want to open source this once its complete.
+
+TODO before open source:
+
+* Make it work :)
+* Finalize extension API
+* Document extension API thoroughly
+* Add version number
+* build/pkg script
+* build for jquery
+* build for prototype?
