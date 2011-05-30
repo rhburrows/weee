@@ -1,0 +1,18 @@
+<html>
+  <head>
+    <title>Test</title>
+  </head>
+  <body>
+    <canvas id="editor" height="500" width="500"></canvas>
+    <script type="text/javascript" src="jquery-1.6.1.min.js"></script>
+    <script type="text/javascript" src="../pkg/jquery.s2e.0.1.0.js"></script>
+    <script type="text/javascript">
+      // <![CDATA[
+      var initialText = "This is a canvas based javascript text editor. " +
+                        "It will hopefully provide and extensible base " +
+                        "that the whole velvet editor can be built upon";
+      $('#editor').s2e(initialText);
+      // ]]>
+    </script>
+  </body>
+</html>
