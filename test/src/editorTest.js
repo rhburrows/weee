@@ -1,4 +1,9 @@
-var WindowTest = TestCase('WindowTest');
+var EditorTest = TestCase('EditorTest');
+
+function MockCanvas2(){}
+MockCanvas2.prototype.getContext = function(){
+    return "Context";
+};
 
 function MockBuffer(contents) {
     this.lastInsertCharCall = null;
@@ -44,11 +49,13 @@ MockView.prototype = {
     }
 };
 
-WindowTest.prototype.testInsertChar = function() {
+EditorTest.prototype.testInsertChar = function() {
     var buffer = new MockBuffer("");
     var view = new MockView();
-    var editor = new Window(view);
+    var canvas = new MockCanvas2();
+    var editor = new Editor(canvas, "");
     editor.buffer = buffer;
+    editor.display = view;
 
     editor.insertChar("a");
     assertEquals("It delegates the insert to the internal buffer", "a", buffer.lastInsertCharCall);
@@ -59,11 +66,13 @@ WindowTest.prototype.testInsertChar = function() {
     assertEquals("It repaints each time", 2, view.paintCount);
 };
 
-WindowTest.prototype.testBackspace = function() {
+EditorTest.prototype.testBackspace = function() {
     var buffer = new MockBuffer("");
     var view = new MockView();
-    var editor = new Window(view);
+    var canvas = new MockCanvas2();
+    var editor = new Editor(canvas, "");
     editor.buffer = buffer;
+    editor.display = view;
 
     editor.backspace();
     assertEquals("It delegates backspace to the internal buffer", 1, buffer.backspaceCount);
@@ -74,11 +83,13 @@ WindowTest.prototype.testBackspace = function() {
     assertEquals("It repaints each time", 2, view.paintCount);
 };
 
-WindowTest.prototype.testPointForward = function() {
+EditorTest.prototype.testPointForward = function() {
     var buffer = new MockBuffer("");
     var view = new MockView();
-    var editor = new Window(view);
+    var canvas = new MockCanvas2();
+    var editor = new Editor(canvas, "");
     editor.buffer = buffer;
+    editor.display = view;
 
     editor.pointForward();
     assertEquals("It delegates pointForward to the internal buffer", 1, buffer.pointForwardCount);
@@ -89,11 +100,13 @@ WindowTest.prototype.testPointForward = function() {
     assertEquals("It repaints each time", 2, view.paintCount);
 };
 
-WindowTest.prototype.testPointBackward = function() {
+EditorTest.prototype.testPointBackward = function() {
     var buffer = new MockBuffer("");
     var view = new MockView();
-    var editor = new Window(view);
+    var canvas = new MockCanvas2();
+    var editor = new Editor(canvas, "");
     editor.buffer = buffer;
+    editor.display = view;
 
     editor.pointBackward();
     assertEquals("It delegates pointBackward to the internal buffer", 1, buffer.pointBackCount);
@@ -104,11 +117,13 @@ WindowTest.prototype.testPointBackward = function() {
     assertEquals("It repaints each time", 2, view.paintCount);
 };
 
-WindowTest.prototype.testPointUp = function() {
+EditorTest.prototype.testPointUp = function() {
     var buffer = new MockBuffer("");
     var view = new MockView();
-    var editor = new Window(view);
+    var canvas = new MockCanvas2();
+    var editor = new Editor(canvas, "");
     editor.buffer = buffer;
+    editor.display = view;
     editor.lineLength = 10;
 
     editor.pointUp();
@@ -116,11 +131,13 @@ WindowTest.prototype.testPointUp = function() {
     assertEquals("It paints itself to the view", 1, view.paintCount);
 };
 
-WindowTest.prototype.testPointDown = function() {
+EditorTest.prototype.testPointDown = function() {
     var buffer = new MockBuffer("");
     var view = new MockView();
-    var editor = new Window(view);
+    var canvas = new MockCanvas2();
+    var editor = new Editor(canvas, ""e);
     editor.buffer = buffer;
+    editor.display = view;
     editor.lineLength = 10;
 
     editor.pointDown();
@@ -128,11 +145,13 @@ WindowTest.prototype.testPointDown = function() {
     assertEquals("It paints itself to the view", 1, view.paintCount);
 };
 
-WindowTest.prototype.testMovePoint = function() {
+EditorTest.prototype.testMovePoint = function() {
     var buffer = new MockBuffer("");
     var view = new MockView();
-    var editor = new Window(view);
+    var canvas = new MockCanvas2();
+    var editor = new Editor(canvas, "");
     editor.buffer = buffer;
+    editor.display = view;
 
     editor.movePoint(1337);
     assertEquals("It delegates movePoint to the internal buffer", 1337, buffer.lastMovePointCall);
@@ -143,17 +162,19 @@ WindowTest.prototype.testMovePoint = function() {
     assertEquals("It repaints each time", 2, view.paintCount);
 };
 
-WindowTest.prototype.testGetContents = function() {
+EditorTest.prototype.testGetContents = function() {
     var buffer = new MockBuffer("A Mock Buffer");
-    var editor = new Window(null);
+    var canvas = new MockCanvas2();
+    var editor = new Editor(canvas, "");
     editor.buffer = buffer;
 
     assertEquals("It returns the toString of the buffer", "A Mock Buffer", editor.getContents());
 };
 
-WindowTest.prototype.testPointLine = function() {
+EditorTest.prototype.testPointLine = function() {
     var buffer = new MockBuffer("");
-    var editor = new Window(null);
+    var canvas = new MockCanvas2();
+    var editor = new Editor(canvas, "");
     editor.buffer = buffer;
 
     buffer.pointPos = 1;
@@ -167,9 +188,10 @@ WindowTest.prototype.testPointLine = function() {
     assertEquals("It goes beyond two lines", 4, editor.pointLine());
 };
 
-WindowTest.prototype.testPointCol = function() {
+EditorTest.prototype.testPointCol = function() {
     var buffer = new MockBuffer("");
-    var editor = new Window(null);
+    var canvas = new MockCanvas2();
+    var editor = new Editor(canvas, "");
     editor.buffer = buffer;
 
     buffer.pointPos = 1;

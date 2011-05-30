@@ -10,7 +10,7 @@ $(STANDALONE_PKG):
 	scripts/build.sh "$(VERSION)"
 
 test: tmp/test-server.pid
-	java -jar test/lib/JsTestDriver-$(JS_TEST_DRIVER).jar --tests all
+	java -jar test/lib/JsTestDriver-$(JS_TEST_VERSION).jar --tests all
 
 tmp/test-server.pid:
 	@echo "Test server not found!"
