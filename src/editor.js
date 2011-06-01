@@ -2,10 +2,10 @@ function Editor(canvas, initialText) {
     this.display = new CanvasDisplay(canvas);
     this.buffer = new Buffer(50);
     this.lineLength = 53;
-    this.inputManager = new CanvasInputManager(this.window);
+    this.inputManager = new CanvasInputManager(this);
     var chars = initialText.split('');
     for (var i=0; i<chars.length; i++) {
-        this.window.insertChar(chars[i]);
+        this.buffer.insertChar(chars[i]);
     }
 }
 
