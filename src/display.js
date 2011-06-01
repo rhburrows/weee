@@ -1,4 +1,4 @@
-function CanvasDisplay(canvas) {
+function Display(canvas) {
     this.canvas = canvas;
     this.context = canvas.getContext('2d');
     this.context.font = '11pt Courier New';
@@ -7,7 +7,7 @@ function CanvasDisplay(canvas) {
     this.lineHeight = 25;
 }
 
-CanvasDisplay.prototype = {
+Display.prototype = {
     paint : function(editor) {
         this.clear();
         this.context.fillStyle = 'black';

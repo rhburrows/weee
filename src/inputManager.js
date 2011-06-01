@@ -1,4 +1,4 @@
-var CanvasInputManager = (function() {
+var InputManager = (function() {
 
   var KBD_NO_MOD = 0;
   var KBD_SHIFT = 1;
@@ -34,14 +34,14 @@ var CanvasInputManager = (function() {
     bindings[code][modifiers] = f;
   }
 
-  function InputManager(editor) {
+  function InputManagerImpl(editor) {
     this.editor = editor;
     document.onkeydown = function(e) {
       bindingForEvent(e)(editor, e);
     };
   }
 
-  InputManager.prototype = {
+  InputManagerImpl.prototype = {
     bindKey : function(code, modifiers, f) {
       bindKey(code, modifiers, f);
     }
@@ -76,5 +76,5 @@ var CanvasInputManager = (function() {
   bindKey(191, KBD_SHIFT, function(editor, e) { editor.insertChar('?'); });
   bindKey(191, KBD_NO_MOD, function(editor, e) { editor.insertChar('/'); });
 
-  return InputManager;
+  return InputManagerImpl;
 })();

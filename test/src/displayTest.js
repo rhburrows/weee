@@ -1,4 +1,4 @@
-var CanvasDisplayTest = TestCase('CanvasDisplayTest');
+var DisplayTest = TestCase('DisplayTest');
 
 function MockCanvas(width, height) {
     this.width = width;
@@ -12,12 +12,12 @@ MockCanvas.prototype.getContext = function() {
     return this.context;
 };
 
-CanvasDisplayTest.prototype.testNew = function() {
+DisplayTest.prototype.testNew = function() {
     var canvas = new MockCanvas();
     var context = {};
     canvas.context = context;
 
-    var display = new CanvasDisplay(canvas);
+    var display = new Display(canvas);
     assertEquals("It sets the canvas to the parameter", canvas, display.canvas);
     assertEquals("It sets the context to the canvas' context", context, display.context);
     assertEquals("It sets the default font on the context", '11pt Courier New', display.context.font);
@@ -26,9 +26,9 @@ CanvasDisplayTest.prototype.testNew = function() {
     assertEquals("It sets the lineHeight", 25, display.lineHeight);
 };
 
-CanvasDisplayTest.prototype.testClear = function() {
+DisplayTest.prototype.testClear = function() {
     var canvas = new MockCanvas(5, 10);
-    var display = new CanvasDisplay(canvas);
+    var display = new Display(canvas);
 
     display.clear();
     assertEquals("It clears a rectangle the size of the canvas",

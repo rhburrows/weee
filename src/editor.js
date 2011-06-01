@@ -1,8 +1,8 @@
 function Editor(canvas, initialText) {
-    this.display = new CanvasDisplay(canvas);
+    this.display = new Display(canvas);
     this.buffer = new Buffer(50);
     this.lineLength = 53;
-    this.inputManager = new CanvasInputManager(this);
+    this.inputManager = new InputManager(this);
     var chars = initialText.split('');
     for (var i=0; i<chars.length; i++) {
         this.buffer.insertChar(chars[i]);
