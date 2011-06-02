@@ -2,6 +2,7 @@
   function Editor(display, initialText) {
     this.display = display;
     this.buffer = new Buffer(50);
+    this.inputManager = new InputManager();
     this.insertString(initialText);
     this.movePoint(-initialText.length);
   }
@@ -36,6 +37,11 @@
 
     movePoint : function(distance) {
       this.buffer.movePoint(distance);
+      this.display.paint(this);
+    },
+
+    bindKey : function(command, f) {
+      this.inputManager.bindKey(command, f);
       this.display.paint(this);
     },
 
@@ -124,6 +130,34 @@
     }
   };
 
+  function InputManager(editor) {
+    this.bindings = {};
+    this.handleInput = function(e) {
+      var c = String.fromCharCode(e.keyCode);
+      bindings[c](editor);
+    };
+  }
+
+  var EMPTY = 0;
+  var KBD_SHIFT = 1;
+  var KBD_CONTROL = 2;
+  var KBD_ALT = 4;
+  var KBD_META = 8;
+
+  InputManager.prototype = {
+    bindKey : function(command, f) {
+      this.bindings[command.toUpperCase()] = f;
+    },
+
+    handler : function(editor) {
+      var bindings = this.bindings;
+      return function(e) {
+        var c = String.fromCharCode(e.keyCode);
+        return bindings[c](editor);
+      };
+    }
+  };
+
   function Display(canvas) {
     this.canvas = canvas;
     this.context = canvas.getContext('2d');
@@ -169,6 +203,7 @@
     this.each(function(){
       var d = new Display(this);
       var e = new Editor(d, opts.initialText);
+      $(this).keydown(e.inputManager.handler(e));
       $(this).data('s2e.editor', e);
     });
   };

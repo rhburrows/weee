@@ -3,10 +3,12 @@ module("S2E", {
     $('#editor').s2e({
       initialText : ""
     });
-    editor = $('#editor').data('s2e.editor');
+    canvas = $('#editor');
+    editor = canvas.data('s2e.editor');
   }
 });
 
+var canvas;
 var editor;
 
 test("insertChar", function(){
@@ -92,4 +94,15 @@ test("movePoint", function(){
   editor.movePoint(-99);
   equals(editor.pointPosition(), 0,
         "It stops at the beginning if it would move past the start");
+});
+
+test("bindKey", function(){
+  var callCount = 0;
+  editor.bindKey('s', function(editor) {
+    callCount++;
+  });
+  var event = jQuery.Event('keydown');
+  event.keyCode = 83; // 83 is the keyCode for 's'
+  canvas.trigger(event);
+  equals(callCount, 1, "It handles basic alpha keys");
 });
