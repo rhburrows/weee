@@ -48,7 +48,7 @@
       this.display.paint(this);
     },
 
-    getContents : function() {
+    contents : function() {
       return this.buffer.toString();
     },
 
@@ -155,7 +155,7 @@
       this.clear();
       this.context.fillStyle = 'black';
 
-      var content = editor.getContents();
+      var content = editor.contents();
       var maxLine = 0;
       for(var x=0, y=this.padding; x<content.length; x=x+editor.lineLength, y=y+this.lineHeight) {
         this.context.fillText(content.slice(x, x+editor.lineLength), this.padding, y);
