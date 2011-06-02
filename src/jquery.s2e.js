@@ -1,8 +1,7 @@
 (function($){
-  function Editor(canvas, initialText) {
-    this.display = new Display(canvas);
+  function Editor(display, initialText) {
+    this.display = display;
     this.buffer = new Buffer(50);
-    this.lineLength = 53;
     this.insertString(initialText);
     this.movePoint(-initialText.length);
   }
@@ -35,14 +34,6 @@
       this.display.paint(this);
     },
 
-    pointUp: function() {
-      this.movePoint(-this.lineLength);
-    },
-
-    pointDown : function() {
-      this.movePoint(this.lineLength);
-    },
-
     movePoint : function(distance) {
       this.buffer.movePoint(distance);
       this.display.paint(this);
@@ -54,14 +45,6 @@
 
     pointPosition : function() {
       return this.buffer.pointPosition();
-    },
-
-    pointLine: function() {
-      return Math.floor(this.pointPosition() / this.lineLength);
-    },
-
-    pointCol : function() {
-      return this.pointPosition() - (this.pointLine() * this.lineLength);
     }
   };
 
@@ -148,6 +131,7 @@
     this.padding = 20;
     this.charWidth = 9;
     this.lineHeight = 25;
+    this.lineLength = 53;
   }
 
   Display.prototype = {
@@ -157,25 +141,34 @@
 
       var content = editor.contents();
       var maxLine = 0;
-      for(var x=0, y=this.padding; x<content.length; x=x+editor.lineLength, y=y+this.lineHeight) {
-        this.context.fillText(content.slice(x, x+editor.lineLength), this.padding, y);
+      for(var x=0, y=this.padding; x<content.length; x=x+this.lineLength, y=y+this.lineHeight) {
+        this.context.fillText(content.slice(x, x+this.lineLength), this.padding, y);
         maxLine++;
       }
 
       this.context.fillStyle = 'red';
       this.context.fillText('|',
-                            this.padding + ((editor.pointCol() - 0.5) * 9),
-                            this.padding + (editor.pointLine() * this.lineHeight));
+                            this.padding + ((this.pointCol(editor) - 0.5) * 9),
+                            this.padding + (this.pointLine(editor) * this.lineHeight));
     },
 
     clear : function() {
       this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    },
+
+    pointCol : function(editor) {
+      return editor.pointPosition() - (this.pointLine(editor) * this.lineLength);
+    },
+
+    pointLine : function(editor) {
+      return Math.floor(editor.pointPosition() / this.lineLength);
     }
   };
 
   $.fn.s2e = function(opts) {
     this.each(function(){
-      var e = new Editor(this, opts.initialText);
+      var d = new Display(this);
+      var e = new Editor(d, opts.initialText);
       $(this).data('s2e.editor', e);
     });
   };
