@@ -6,7 +6,7 @@ PKG = $(PKG_DIR)/jquery.s2e.$(VERSION).js
 
 build: $(PKG)
 $(PKG):
-	scripts/build.sh "$(VERSION)"
+	cp src/jquery.s2e.js "$(VERSION)"
 
 clean:
-	rm pkg/*
+	rm $(PKG_DIR)/*
