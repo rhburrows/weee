@@ -6,4 +6,6 @@
       new Editor(e, initialText);
     });
   };
+
+  window.S2Editor = Editor;
 })(jQuery);

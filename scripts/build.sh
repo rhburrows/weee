@@ -1,9 +1,9 @@
 #!/bin/sh
 
 VERSION="$1"
-dest="pkg/s2e-$VERSION.js"
+dest="pkg/jquery.s2e.$VERSION.js"
 
-cp src/build/standalone.js $dest
+cp src/build/jquery.js $dest
 
 files="$(ls src/*.js)"
 for file in $files
