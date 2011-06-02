@@ -97,12 +97,95 @@ test("movePoint", function(){
 });
 
 test("bindKey", function(){
-  var callCount = 0;
+  var callCountOne = 0;
   editor.bindKey('s', function(editor) {
-    callCount++;
+    callCountOne++;
   });
-  var event = jQuery.Event('keydown');
-  event.keyCode = 83; // 83 is the keyCode for 's'
-  canvas.trigger(event);
-  equals(callCount, 1, "It handles basic alpha keys");
+  var keyPressS = jQuery.Event('keydown');
+  keyPressS.keyCode = 83; // 83 is the keyCode for 's'
+  canvas.trigger(keyPressS);
+  equals(callCountOne, 1, "It handles basic alpha keys");
+
+  var callCountTwo = 0;
+  editor.bindKey('S-s', function(editor) {
+    callCountTwo++;
+  });
+  var keyPressShiftS = jQuery.Event('keydown');
+  keyPressShiftS.keyCode = 83;
+  keyPressShiftS.shiftKey = true;
+  canvas.trigger(keyPressShiftS);
+  equals(callCountTwo, 1, "It handles the shift modifier");
+
+  var callCountThree = 0;
+  editor.bindKey('C-s', function(editor) {
+    callCountThree++;
+  });
+  var keyPressCtrlS = jQuery.Event('keydown');
+  keyPressCtrlS.keyCode = 83;
+  keyPressCtrlS.ctrlKey = true;
+  canvas.trigger(keyPressCtrlS);
+  equals(callCountThree, 1, "It handles the control modifier");
+
+  var callCountFour = 0;
+  editor.bindKey('A-s', function(editor){
+    callCountFour++;
+  });
+  var keyPressAltS = jQuery.Event('keydown');
+  keyPressAltS.keyCode = 83;
+  keyPressAltS.altKey = true;
+  canvas.trigger(keyPressAltS);
+  equals(callCountFour, 1, "It handles the alt modifier");
+
+  var callCountFive = 0;
+  editor.bindKey('M-s', function(editor){
+    callCountFive++;
+  });
+  var keyPressMetaS = jQuery.Event('keydown');
+  keyPressMetaS.keyCode = 83;
+  keyPressMetaS.metaKey = true;
+  canvas.trigger(keyPressMetaS);
+  equals(callCountFive, 1, "It handles the meta modifier");
+
+  var callCountSix = 0;
+  editor.bindKey('C-M-s', function(editor){
+    callCountSix++;
+  });
+  var keyPressCtrlMetaS = jQuery.Event('keydown');
+  keyPressCtrlMetaS.keyCode = 83;
+  keyPressCtrlMetaS.ctrlKey = true;
+  keyPressCtrlMetaS.metaKey = true;
+  canvas.trigger(keyPressCtrlMetaS);
+  equals(callCountSix, 1, "It handles multiple modifiers");
+
+  canvas.trigger(keyPressS);
+  equals(callCountOne, 2, "Keybindings don't step on each other");
+
+  canvas.trigger(keyPressShiftS);
+  equals(callCountTwo, 2, "Keybindings don't step on each other");
+
+  canvas.trigger(keyPressCtrlS);
+  equals(callCountThree, 2, "Keybindings don't step on each other");
+
+  canvas.trigger(keyPressAltS);
+  equals(callCountFour, 2, "Keybindings don't step on each other");
+
+  canvas.trigger(keyPressMetaS);
+  equals(callCountFive, 2, "Keybindings don't step on each other");
+
+  canvas.trigger(keyPressCtrlMetaS);
+  equals(callCountSix, 2, "Keybindings don't step on each other");
+});
+
+test("charAtPoint", function(){
+  editor.insertString("Hi");
+
+  equals(editor.charAtPoint(), "",
+         "It returns an empty string if at the end of the buffer");
+
+  editor.pointBackward();
+  equals(editor.charAtPoint(), "i",
+         "It returns the character immediately after the point");
+
+  editor.pointBackward();
+  equals(editor.charAtPoint(), "H");
 });

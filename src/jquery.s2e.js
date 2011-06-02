@@ -51,6 +51,10 @@
 
     pointPosition : function() {
       return this.buffer.pointPosition();
+    },
+
+    charAtPoint : function() {
+      return this.buffer.rightChar();
     }
   };
 
@@ -64,7 +68,7 @@
   Buffer.prototype = {
     pointForward : function() {
       if (this.postsize > 0) {
-        this.buf[this.presize] = this.buf[this.size - this.postsize];
+        this.buf[this.presize] = this.rightChar();
         this.presize = this.presize + 1;
         this.postsize = this.postsize - 1;
       }
@@ -72,8 +76,7 @@
 
     pointBackward : function() {
       if (this.presize > 0) {
-        var c = this.buf[this.presize - 1];
-        this.buf[this.size - this.postsize - 1] = c;
+        this.buf[this.size - this.postsize - 1] = this.leftChar();
         this.postsize = this.postsize + 1;
         this.presize = this.presize - 1;
       }
@@ -116,6 +119,18 @@
       return this.presize;
     },
 
+    rightChar : function() {
+      if (this.postsize > 0) {
+        return this.buf[this.size - this.postsize];
+      } else {
+        return "";
+      }
+    },
+
+    leftChar : function() {
+      return this.buf[this.presize - 1];
+    },
+
     _expand : function() {
       var newsize = this.size * 2;
       var newbuf = new Array(newsize);
@@ -146,14 +161,47 @@
 
   InputManager.prototype = {
     bindKey : function(command, f) {
-      this.bindings[command.toUpperCase()] = f;
+      var keys = command.split('-');
+      var modifiers = EMPTY;
+      while (keys.length > 1) {
+        var mod = keys.shift();
+        if (mod == 'S') {
+          modifiers = modifiers | KBD_SHIFT;
+        }
+        if (mod == 'C') {
+          modifiers = modifiers | KBD_CONTROL;
+        }
+        if (mod == 'A') {
+          modifiers = modifiers | KBD_ALT;
+        }
+        if (mod == 'M') {
+          modifiers = modifiers | KBD_META;
+        }
+      }
+
+      // There's probably a better way to do this
+      var character = keys[0].toUpperCase();
+      this.bindings[character + modifiers] = f;
     },
 
     handler : function(editor) {
       var bindings = this.bindings;
       return function(e) {
         var c = String.fromCharCode(e.keyCode);
-        return bindings[c](editor);
+        var modifiers = EMPTY;
+        if (e.shiftKey) {
+          modifiers = modifiers | KBD_SHIFT;
+        }
+        if (e.ctrlKey) {
+          modifiers = modifiers | KBD_CONTROL;
+        }
+        if (e.altKey) {
+          modifiers = modifiers | KBD_ALT;
+        }
+        if (e.metaKey) {
+          modifiers = modifiers | KBD_META;
+        }
+        return bindings[c + modifiers](editor);
       };
     }
   };
