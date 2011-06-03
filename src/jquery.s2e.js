@@ -209,11 +209,8 @@
   function Display(canvas) {
     this.canvas = canvas;
     this.context = canvas.getContext('2d');
-    this.charWidth = 14;
-    this.context.font = '14px Courier New';
     this.padding = 20;
-    this.lineHeight = 25;
-    this.lineLength = Math.floor(($(canvas).width() - 2*this.padding) / this.charWidth);
+    this.setFont(14, 'Courier New');
   }
 
   Display.prototype = {
@@ -227,20 +224,37 @@
       var contents = editor.contents();
       for (var i=0; i<contents.length; i++) {
         var c = contents.charAt(i);
-        this.context.fillText(c, x, y);
-        if (i == editor.pointPosition()) {
-          this.context.fillStyle = 'red';
-          this.context.fillText('|', x - (this.charWidth / 2), y);
-          this.context.fillStyle = 'black';
-        }
 
-        x = x + this.charWidth;
-        currentLineCount++;
-        
-        if (currentLineCount == this.lineLength) {
+        if (c == '\n') {
+          if (i == editor.pointPosition()) {
+            this.context.fillStyle = 'red';
+            this.context.fillText('|', x - (this.charWidth / 2), y);
+            this.context.fillStyle = 'black';
+          }
+
           x = this.padding;
           y = y + this.lineHeight;
           currentLineCount = 0;
+        } else {
+          this.context.fillText(c, x, y);
+
+          if (i == editor.pointPosition()) {
+            this.context.fillStyle = 'red';
+            this.context.fillText('|', x - (this.charWidth / 2), y);
+            this.context.fillStyle = 'black';
+          }
+
+          x = x + this.charWidth;
+          currentLineCount++;
+        
+          if (currentLineCount == this.lineLength) {
+            this.context.fillStyle = 'grey';
+            this.context.fillRect(x, y-(this.lineHeight / 2), 5, 5);
+            this.context.fillStyle = 'black';
+            x = this.padding;
+            y = y + this.lineHeight;
+            currentLineCount = 0;
+          }
         }
       }
     },
@@ -255,6 +269,17 @@
 
     pointLine : function(editor) {
       return Math.floor(editor.pointPosition() / this.lineLength);
+    },
+
+    width : function() {
+      return $(this.canvas).width();
+    },
+
+    setFont : function(size, font) {
+      this.charWidth = size * 0.8;
+      this.lineHeight = size * 1.6;
+      this.context.font = "" + size + "px " + font;
+      this.lineLength = Math.floor((this.width() - 2 * this.padding) / this.charWidth);
     }
   };
 
