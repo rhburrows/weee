@@ -227,9 +227,7 @@
 
         if (c == '\n') {
           if (i == editor.pointPosition()) {
-            this.context.fillStyle = 'red';
-            this.context.fillText('|', x - (this.charWidth / 2), y);
-            this.context.fillStyle = 'black';
+            this.paintCursor(x, y);
           }
 
           x = this.padding;
@@ -239,9 +237,7 @@
           this.context.fillText(c, x, y);
 
           if (i == editor.pointPosition()) {
-            this.context.fillStyle = 'red';
-            this.context.fillText('|', x - (this.charWidth / 2), y);
-            this.context.fillStyle = 'black';
+            this.paintCursor(x, y);
           }
 
           x = x + this.charWidth;
@@ -259,16 +255,14 @@
       }
     },
 
+    paintCursor : function(x, y) {
+      this.context.fillStyle = 'red';
+      this.context.fillText('|', x - (this.charWidth / 2), y);
+      this.context.fillStyle = 'black';
+    },
+
     clear : function() {
       this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    },
-
-    pointCol : function(editor) {
-      return editor.pointPosition() - (this.pointLine(editor) * this.lineLength);
-    },
-
-    pointLine : function(editor) {
-      return Math.floor(editor.pointPosition() / this.lineLength);
     },
 
     width : function() {
