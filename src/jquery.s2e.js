@@ -279,7 +279,17 @@
 
   $.fn.s2e = function(opts) {
     this.each(function(){
-      var d = new Display(this);
+      var canvas = document.createElement('canvas');
+      $(canvas).attr('width', '' + $(this).width() + 'px');
+      $(canvas).attr('height', '' + $(this).height() + 'px');
+      $(this).css({
+        position: 'absolute',
+        left: '-100%',
+        top: '-100%'
+      });
+      $(this).after(canvas);
+
+      var d = new Display(canvas);
       var e = new Editor(d, opts.initialText);
       $(this).keydown(e.inputManager.handler(e));
       $(this).data('s2e.editor', e);
