@@ -3,12 +3,12 @@ module("S2E", {
     $('#editor').s2e({
       initialText : ""
     });
-    canvas = $('#editor');
-    editor = canvas.data('s2e.editor');
+    textarea = $('#editor');
+    editor = textarea.data('s2e.editor');
   }
 });
 
-var canvas;
+var textarea;
 var editor;
 
 test("insertChar", function(){
@@ -103,7 +103,7 @@ test("bindKey", function(){
   });
   var keyPressS = jQuery.Event('keydown');
   keyPressS.keyCode = 83; // 83 is the keyCode for 's'
-  canvas.trigger(keyPressS);
+  textarea.trigger(keyPressS);
   equals(callCountOne, 1, "It handles basic alpha keys");
 
   var callCountTwo = 0;
@@ -113,7 +113,7 @@ test("bindKey", function(){
   var keyPressShiftS = jQuery.Event('keydown');
   keyPressShiftS.keyCode = 83;
   keyPressShiftS.shiftKey = true;
-  canvas.trigger(keyPressShiftS);
+  textarea.trigger(keyPressShiftS);
   equals(callCountTwo, 1, "It handles the shift modifier");
 
   var callCountThree = 0;
@@ -123,7 +123,7 @@ test("bindKey", function(){
   var keyPressCtrlS = jQuery.Event('keydown');
   keyPressCtrlS.keyCode = 83;
   keyPressCtrlS.ctrlKey = true;
-  canvas.trigger(keyPressCtrlS);
+  textarea.trigger(keyPressCtrlS);
   equals(callCountThree, 1, "It handles the control modifier");
 
   var callCountFour = 0;
@@ -133,7 +133,7 @@ test("bindKey", function(){
   var keyPressAltS = jQuery.Event('keydown');
   keyPressAltS.keyCode = 83;
   keyPressAltS.altKey = true;
-  canvas.trigger(keyPressAltS);
+  textarea.trigger(keyPressAltS);
   equals(callCountFour, 1, "It handles the alt modifier");
 
   var callCountFive = 0;
@@ -143,7 +143,7 @@ test("bindKey", function(){
   var keyPressMetaS = jQuery.Event('keydown');
   keyPressMetaS.keyCode = 83;
   keyPressMetaS.metaKey = true;
-  canvas.trigger(keyPressMetaS);
+  textarea.trigger(keyPressMetaS);
   equals(callCountFive, 1, "It handles the meta modifier");
 
   var callCountSix = 0;
@@ -154,25 +154,25 @@ test("bindKey", function(){
   keyPressCtrlMetaS.keyCode = 83;
   keyPressCtrlMetaS.ctrlKey = true;
   keyPressCtrlMetaS.metaKey = true;
-  canvas.trigger(keyPressCtrlMetaS);
+  textarea.trigger(keyPressCtrlMetaS);
   equals(callCountSix, 1, "It handles multiple modifiers");
 
-  canvas.trigger(keyPressS);
+  textarea.trigger(keyPressS);
   equals(callCountOne, 2, "Keybindings don't step on each other");
 
-  canvas.trigger(keyPressShiftS);
+  textarea.trigger(keyPressShiftS);
   equals(callCountTwo, 2, "Keybindings don't step on each other");
 
-  canvas.trigger(keyPressCtrlS);
+  textarea.trigger(keyPressCtrlS);
   equals(callCountThree, 2, "Keybindings don't step on each other");
 
-  canvas.trigger(keyPressAltS);
+  textarea.trigger(keyPressAltS);
   equals(callCountFour, 2, "Keybindings don't step on each other");
 
-  canvas.trigger(keyPressMetaS);
+  textarea.trigger(keyPressMetaS);
   equals(callCountFive, 2, "Keybindings don't step on each other");
 
-  canvas.trigger(keyPressCtrlMetaS);
+  textarea.trigger(keyPressCtrlMetaS);
   equals(callCountSix, 2, "Keybindings don't step on each other");
 });
 
@@ -188,4 +188,32 @@ test("charAtPoint", function(){
 
   editor.pointBackward();
   equals(editor.charAtPoint(), "H");
+});
+
+test("afterInsert", function() {
+  var callbackCountOne = 0;
+  editor.afterInsert(function(c){
+    callbackCountOne++;
+  });
+  editor.insertChar('a');
+  equals(callbackCountOne, 1, "It calls the callbacks after insertChar");
+
+  var callbackCountTwo = 0;
+  editor.afterInsert(function(c){
+    callbackCountTwo++;
+  });
+  editor.insertChar('b');
+  equals(callbackCountTwo, 1, "It works with multiple callbacks");
+  equals(callbackCountOne, 2, "It doesn't overwrite existing callbacks");
+
+  editor.insertString('cdefg');
+  equals(callbackCountOne, 7, "It is called multiple times with insertString");
+  equals(callbackCountTwo, 6, "It is called multiple times with insertString");
+});
+
+test("textarea-editor link", function(){
+  editor.insertString("Some Text");
+
+  equals(textarea.val(), "Some Text",
+        "It keeps the backing textarea synced to the canvas");
 });

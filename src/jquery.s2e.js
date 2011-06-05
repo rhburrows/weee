@@ -1,5 +1,8 @@
 (function($){
   function Editor(display, initialText) {
+    // Callbacks
+    this.afterInsertCallbacks = [];
+
     this.display = display;
     this.buffer = new Buffer(50);
     this.inputManager = new InputManager();
@@ -10,12 +13,19 @@
   Editor.prototype = {
     insertChar: function(character) {
       this.buffer.insertChar(character);
+      for (var i=0; i<this.afterInsertCallbacks.length; i++) {
+        this.afterInsertCallbacks[i](character);
+      }
       this.display.paint(this);
     },
 
     insertString: function(str) {
       for (var i=0; i<str.length; i++) {
-        this.buffer.insertChar(str.charAt(i));
+        var c = str.charAt(i);
+        this.buffer.insertChar(c);
+        for (var j=0; j<this.afterInsertCallbacks.length; j++) {
+          this.afterInsertCallbacks[j](c);
+        }
       }
       this.display.paint(this);
     },
@@ -55,6 +65,11 @@
 
     charAtPoint : function() {
       return this.buffer.rightChar();
+    },
+
+    // callbacks for client code
+    afterInsert : function(f) {
+      this.afterInsertCallbacks.push(f);
     }
   };
 
@@ -279,20 +294,26 @@
 
   $.fn.s2e = function(opts) {
     this.each(function(){
+      var textarea = $(this);
       var canvas = document.createElement('canvas');
       $(canvas).attr('width', '' + $(this).width() + 'px');
       $(canvas).attr('height', '' + $(this).height() + 'px');
-      $(this).css({
+      textarea.css({
         position: 'absolute',
         left: '-100%',
         top: '-100%'
       });
-      $(this).after(canvas);
+      textarea.after(canvas);
 
       var d = new Display(canvas);
       var e = new Editor(d, opts.initialText);
-      $(this).keydown(e.inputManager.handler(e));
-      $(this).data('s2e.editor', e);
+      textarea.val(opts.initialText);
+
+      e.afterInsert(function(c) {
+        textarea.val(e.contents());
+      });
+      textarea.keydown(e.inputManager.handler(e));
+      textarea.data('s2e.editor', e);
     });
   };
 })(jQuery);
