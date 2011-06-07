@@ -135,25 +135,15 @@ test("bindKey", function(){
   equals(callCountFour, 1, "It handles the alt modifier");
 
   var callCountFive = 0;
-  editor.bindKey('M-s', function(editor){
+  editor.bindKey('C-A-s', function(editor){
     callCountFive++;
   });
-  var keyPressMetaS = jQuery.Event('keydown');
-  keyPressMetaS.keyCode = 83;
-  keyPressMetaS.metaKey = true;
-  textarea.trigger(keyPressMetaS);
-  equals(callCountFive, 1, "It handles the meta modifier");
-
-  var callCountSix = 0;
-  editor.bindKey('C-M-s', function(editor){
-    callCountSix++;
-  });
-  var keyPressCtrlMetaS = jQuery.Event('keydown');
-  keyPressCtrlMetaS.keyCode = 83;
-  keyPressCtrlMetaS.ctrlKey = true;
-  keyPressCtrlMetaS.metaKey = true;
-  textarea.trigger(keyPressCtrlMetaS);
-  equals(callCountSix, 1, "It handles multiple modifiers");
+  var keyPressCtrlAltS = jQuery.Event('keydown');
+  keyPressCtrlAltS.keyCode = 83;
+  keyPressCtrlAltS.ctrlKey = true;
+  keyPressCtrlAltS.altKey = true;
+  textarea.trigger(keyPressCtrlAltS);
+  equals(callCountFive, 1, "It handles multiple modifiers");
 
   textarea.trigger(keyPressS);
   equals(callCountOne, 2, "Keybindings don't step on each other");
@@ -167,11 +157,8 @@ test("bindKey", function(){
   textarea.trigger(keyPressAltS);
   equals(callCountFour, 2, "Keybindings don't step on each other");
 
-  textarea.trigger(keyPressMetaS);
+  textarea.trigger(keyPressCtrlAltS);
   equals(callCountFive, 2, "Keybindings don't step on each other");
-
-  textarea.trigger(keyPressCtrlMetaS);
-  equals(callCountSix, 2, "Keybindings don't step on each other");
 });
 
 test("charAtPoint", function(){

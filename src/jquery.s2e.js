@@ -172,7 +172,6 @@
   var KBD_SHIFT = 1;
   var KBD_CONTROL = 2;
   var KBD_ALT = 4;
-  var KBD_META = 8;
 
   InputManager.prototype = {
     bindKey : function(command, f) {
@@ -188,9 +187,6 @@
         }
         if (mod == 'A') {
           modifiers = modifiers | KBD_ALT;
-        }
-        if (mod == 'M') {
-          modifiers = modifiers | KBD_META;
         }
       }
 
@@ -212,9 +208,6 @@
         }
         if (e.altKey) {
           modifiers = modifiers | KBD_ALT;
-        }
-        if (e.metaKey) {
-          modifiers = modifiers | KBD_META;
         }
         return bindings[c + modifiers](editor, e);
       };
