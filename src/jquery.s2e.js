@@ -209,7 +209,13 @@
         if (e.altKey) {
           modifiers = modifiers | KBD_ALT;
         }
-        return bindings[c + modifiers](editor, e);
+
+        if (typeof bindings[c + modifiers] !== "undefined") {
+          return bindings[c + modifiers](editor, e);
+        } else {
+          e.preventDefault();
+          return true;
+        }
       };
     }
   };
