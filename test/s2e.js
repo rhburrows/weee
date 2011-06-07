@@ -1,8 +1,6 @@
 module("S2E", {
   setup: function() {
-    $('#editor').s2e({
-      initialText : ""
-    });
+    $('#editor').s2e();
     textarea = $('#editor');
     editor = textarea.data('s2e.editor');
   }

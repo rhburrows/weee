@@ -296,18 +296,26 @@
     this.each(function(){
       var textarea = $(this);
       var canvas = document.createElement('canvas');
-      $(canvas).attr('width', '' + $(this).width() + 'px');
-      $(canvas).attr('height', '' + $(this).height() + 'px');
+      var areawidth = '' + textarea.width() + 'px';
+      var areaheight = '' + textarea.height() + 'px';
+      $(canvas).attr('width', areawidth);
+      $(canvas).attr('height', areaheight);
       textarea.css({
         position: 'absolute',
-        left: '-100%',
-        top: '-100%'
+        left: '-' + areawidth,
+        top: '-' + areaheight
       });
       textarea.after(canvas);
 
+      var options = $.extend({}, $.fn.s2e.defaults, opts);
+
       var d = new Display(canvas);
-      var e = new Editor(d, opts.initialText);
-      textarea.val(opts.initialText);
+      var e = new Editor(d, options.initialText);
+      textarea.val(options.initialText);
+
+      $.each(options.keybindings, function(key, binding){
+        e.bindKey(key, binding);
+      });
 
       e.afterInsert(function(c) {
         textarea.val(e.contents());
@@ -315,5 +323,11 @@
       textarea.keydown(e.inputManager.handler(e));
       textarea.data('s2e.editor', e);
     });
+  };
+
+  // Defaults
+  $.fn.s2e.defaults = {
+    initialText : "",
+    keybindings : {}
   };
 })(jQuery);
