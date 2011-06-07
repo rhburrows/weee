@@ -216,7 +216,7 @@
         if (e.metaKey) {
           modifiers = modifiers | KBD_META;
         }
-        return bindings[c + modifiers](editor);
+        return bindings[c + modifiers](editor, e);
       };
     }
   };
