@@ -296,14 +296,14 @@
     this.each(function(){
       var textarea = $(this);
       var canvas = document.createElement('canvas');
-      var areawidth = '' + textarea.width() + 'px';
-      var areaheight = '' + textarea.height() + 'px';
-      $(canvas).attr('width', areawidth);
-      $(canvas).attr('height', areaheight);
+      var areawidth = textarea.width();
+      var areaheight = textarea.height();
+      $(canvas).attr('width', '' + areawidth + 'px');
+      $(canvas).attr('height', '' + areaheight + 'px');
       textarea.css({
         position: 'absolute',
-        left: '-' + (areawidth*2),
-        top: '-' + (areaheight*2)
+        left: '-' + (2*areawidth) + 'px',
+        top: '-' + (2*areaheight) + 'px'
       });
       textarea.after(canvas);
 
