@@ -302,8 +302,8 @@
       $(canvas).attr('height', areaheight);
       textarea.css({
         position: 'absolute',
-        left: '-' + areawidth,
-        top: '-' + areaheight
+        left: '-' + (areawidth*2),
+        top: '-' + (areaheight*2)
       });
       textarea.after(canvas);
 
@@ -322,6 +322,8 @@
       });
       textarea.keydown(e.inputManager.handler(e));
       textarea.data('s2e.editor', e);
+
+      $(canvas).click(function(){ textarea.focus(); });
     });
   };
 
