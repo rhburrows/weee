@@ -174,12 +174,16 @@
   var KBD_ALT = 4;
 
   var SPECIAL_KEY_STRINGS = {
+     8 : '<BACKSPACE>',
      9 : '<TAB>',
+    13 : '<ENTER>',
+    27 : '<ESC>',
     32 : '<SPACE>',
     37 : '<LEFT>',
     38 : '<UP>',
     39 : '<RIGHT>',
-    40 : '<DOWN>'
+    40 : '<DOWN>',
+    46 : '<DELETE>'
   };
 
   function keyStringFromCode(charCode) {
@@ -350,7 +354,6 @@
   // Defaults
   $.fn.s2e.defaults = {
     initialText : "",
-    keybindings : {
-    }
+    keybindings : {}
   };
 })(jQuery);
