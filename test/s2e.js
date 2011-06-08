@@ -238,3 +238,5 @@ test("textarea-editor link", function(){
   equals(textarea.val(), "Some Text",
         "It keeps the backing textarea synced to the canvas");
 });
+
+// TODO test default keybindings
