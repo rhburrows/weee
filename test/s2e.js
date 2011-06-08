@@ -161,6 +161,62 @@ test("bindKey", function(){
   equals(callCountFive, 2, "Keybindings don't step on each other");
 });
 
+test("special key string code", function(){
+  var callCountOne = 0;
+  editor.bindKey('<LEFT>', function(editor, ev){
+    callCountOne++;
+  });
+  var keyPressLeft = jQuery.Event('keydown');
+  keyPressLeft.keyCode = 37;
+  textarea.trigger(keyPressLeft);
+  equals(callCountOne, 1, "It recognizes '<LEFT>' as the left arrow key");
+
+  var callCountTwo = 0;
+  editor.bindKey('<UP>', function(editor, ev){
+    callCountTwo++;
+  });
+  var keyPressUp = jQuery.Event('keydown');
+  keyPressUp.keyCode = 38;
+  textarea.trigger(keyPressUp);
+  equals(callCountTwo, 1, "It recognizes '<UP>' as the up arrow key");
+
+  var callCountThree = 0;
+  editor.bindKey('<RIGHT>', function(editor, ev){
+    callCountThree++;
+  });
+  var keyPressRight = jQuery.Event('keydown');
+  keyPressRight.keyCode = 39;
+  textarea.trigger(keyPressRight);
+  equals(callCountThree, 1, "It recognizes '<RIGHT>' as the right arrow key");
+
+  var callCountFour = 0;
+  editor.bindKey('<DOWN>', function(editor, ev){
+    callCountFour++;
+  });
+  var keyPressDown = jQuery.Event('keydown');
+  keyPressDown.keyCode = 40;
+  textarea.trigger(keyPressDown);
+  equals(callCountFour, 1, "It recognizes '<DOWN>' as the down arrow key");
+
+  var callCountFive = 0;
+  editor.bindKey('<TAB>', function(editor, ev) {
+    callCountFive++;
+  });
+  var keyPressTab = jQuery.Event('keydown');
+  keyPressTab.keyCode = 9;
+  textarea.trigger(keyPressTab);
+  equals(callCountFive, 1, "It recognizes '<TAB>' as the tab key");
+
+  var callCountSix = 0;
+  editor.bindKey('<SPACE>', function(editor, ev){
+    callCountSix++;
+  });
+  var keyPressSpace = jQuery.Event('keydown');
+  keyPressSpace.keyCode = 32;
+  textarea.trigger(keyPressSpace);
+  equals(callCountSix, 1, "It recognizes '<SPACE>' as the space key");
+});
+
 test("charAtPoint", function(){
   editor.insertString("Hi");
 

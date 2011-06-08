@@ -173,6 +173,23 @@
   var KBD_CONTROL = 2;
   var KBD_ALT = 4;
 
+  var SPECIAL_KEY_STRINGS = {
+     9 : '<TAB>',
+    32 : '<SPACE>',
+    37 : '<LEFT>',
+    38 : '<UP>',
+    39 : '<RIGHT>',
+    40 : '<DOWN>'
+  };
+
+  function keyStringFromCode(charCode) {
+    if (typeof SPECIAL_KEY_STRINGS[charCode] !== 'undefined') {
+      return SPECIAL_KEY_STRINGS[charCode];
+    } else {
+      return String.fromCharCode(charCode);
+    }
+  }
+
   InputManager.prototype = {
     bindKey : function(command, f) {
       var keys = command.split('-');
@@ -191,14 +208,18 @@
       }
 
       // There's probably a better way to do this
-      var character = keys[0].toUpperCase();
-      this.bindings[character + modifiers] = f;
+      var keyString = keys[0];
+      if (typeof SPECIAL_KEY_STRINGS[keyString] === "undefined") {
+        keyString = keyString.toUpperCase();
+      }
+
+      this.bindings[keyString + modifiers] = f;
     },
 
     handler : function(editor) {
       var bindings = this.bindings;
       return function(e) {
-        var c = String.fromCharCode(e.keyCode);
+        var keyString = keyStringFromCode(e.keyCode);
         var modifiers = EMPTY;
         if (e.shiftKey) {
           modifiers = modifiers | KBD_SHIFT;
@@ -210,8 +231,8 @@
           modifiers = modifiers | KBD_ALT;
         }
 
-        if (typeof bindings[c + modifiers] !== "undefined") {
-          return bindings[c + modifiers](editor, e);
+        if (typeof bindings[keyString + modifiers] !== "undefined") {
+          return bindings[keyString + modifiers](editor, e);
         } else {
           e.preventDefault();
           return true;
@@ -329,6 +350,7 @@
   // Defaults
   $.fn.s2e.defaults = {
     initialText : "",
-    keybindings : {}
+    keybindings : {
+    }
   };
 })(jQuery);
