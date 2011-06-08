@@ -236,6 +236,7 @@
         }
 
         if (typeof bindings[keyString + modifiers] !== "undefined") {
+          e.preventDefault();
           return bindings[keyString + modifiers](editor, e);
         } else {
           e.preventDefault();
