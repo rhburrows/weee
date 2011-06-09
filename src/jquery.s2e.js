@@ -223,7 +223,7 @@
     handler : function(editor) {
       var bindings = this.bindings;
       return function(e) {
-        var keyString = keyStringFromCode(e.keyCode);
+        var keyString = keyStringFromCode(e.which);
         var modifiers = EMPTY;
         if (e.shiftKey) {
           modifiers = modifiers | KBD_SHIFT;
@@ -383,8 +383,8 @@
     'S-0' : insertF(')')
   };
   // Uppercase and lowercase letters
-  for (var i=65; i<91; i++) {
-    var c = String.fromCharCode(i);
+  for (var j=65; j<91; j++) {
+    var c = String.fromCharCode(j);
     defaultKeys[c] = insertF(c.toLowerCase());
     defaultKeys['S-' + c] = insertF(c);
   }

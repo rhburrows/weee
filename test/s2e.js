@@ -100,7 +100,7 @@ test("bindKey", function(){
     callCountOne++;
   });
   var keyPressS = jQuery.Event('keydown');
-  keyPressS.keyCode = 83; // 83 is the keyCode for 's'
+  keyPressS.which = 83; // 83 is the which for 's'
   textarea.trigger(keyPressS);
   equals(callCountOne, 1, "It handles basic alpha keys");
 
@@ -109,7 +109,7 @@ test("bindKey", function(){
     callCountTwo++;
   });
   var keyPressShiftS = jQuery.Event('keydown');
-  keyPressShiftS.keyCode = 83;
+  keyPressShiftS.which = 83;
   keyPressShiftS.shiftKey = true;
   textarea.trigger(keyPressShiftS);
   equals(callCountTwo, 1, "It handles the shift modifier");
@@ -119,7 +119,7 @@ test("bindKey", function(){
     callCountThree++;
   });
   var keyPressCtrlS = jQuery.Event('keydown');
-  keyPressCtrlS.keyCode = 83;
+  keyPressCtrlS.which = 83;
   keyPressCtrlS.ctrlKey = true;
   textarea.trigger(keyPressCtrlS);
   equals(callCountThree, 1, "It handles the control modifier");
@@ -129,7 +129,7 @@ test("bindKey", function(){
     callCountFour++;
   });
   var keyPressAltS = jQuery.Event('keydown');
-  keyPressAltS.keyCode = 83;
+  keyPressAltS.which = 83;
   keyPressAltS.altKey = true;
   textarea.trigger(keyPressAltS);
   equals(callCountFour, 1, "It handles the alt modifier");
@@ -139,7 +139,7 @@ test("bindKey", function(){
     callCountFive++;
   });
   var keyPressCtrlAltS = jQuery.Event('keydown');
-  keyPressCtrlAltS.keyCode = 83;
+  keyPressCtrlAltS.which = 83;
   keyPressCtrlAltS.ctrlKey = true;
   keyPressCtrlAltS.altKey = true;
   textarea.trigger(keyPressCtrlAltS);
@@ -161,14 +161,14 @@ test("bindKey", function(){
   equals(callCountFive, 2, "Keybindings don't step on each other");
 });
 
-function testKeyString(keyString, keyCode, name) {
+function testKeyString(keyString, which, name) {
   test(keyString + " matches " + name, function() {
     var callCount = 0;
     editor.bindKey(keyString, function(editor, ev){
       callCount++;
     });
     var keyPress = jQuery.Event('keydown');
-    keyPress.keyCode = keyCode;
+    keyPress.which = which;
     textarea.trigger(keyPress);
     equals(callCount, 1,
            "It recognizes '" + keyString + "' as the " + name + " key");
@@ -178,7 +178,7 @@ function testKeyString(keyString, keyCode, name) {
       modCallCount++;
     });
     var modKeyPress = jQuery.Event('keydown');
-    modKeyPress.keyCode = keyCode;
+    modKeyPress.which = which;
     modKeyPress.ctrlKey = true;
     textarea.trigger(modKeyPress);
     equals(modCallCount, 1,
