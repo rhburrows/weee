@@ -196,6 +196,18 @@ testKeyString('<BACKSPACE>', 8, "backspace");
 testKeyString('<ENTER>', 13, "enter");
 testKeyString('<ESC>', 27, "escape");
 testKeyString('<DELETE>', 46, "delete");
+testKeyString('<F1>', 112, "F1");
+testKeyString('<F2>', 113, "F2");
+testKeyString('<F3>', 114, "F3");
+testKeyString('<F4>', 115, "F4");
+testKeyString('<F5>', 116, "F5");
+testKeyString('<F6>', 117, "F6");
+testKeyString('<F7>', 118, "F7");
+testKeyString('<F8>', 119, "F8");
+testKeyString('<F9>', 120, "F9");
+testKeyString('<F10>', 121, "F10");
+testKeyString('<F11>', 122, "F11");
+testKeyString('<F12>', 123, "F12");
 
 test("charAtPoint", function(){
   editor.insertString("Hi");

@@ -163,7 +163,7 @@
   function InputManager(editor) {
     this.bindings = {};
     this.handleInput = function(e) {
-      var c = String.fromCharCode(e.keyCode);
+      var c = String.fromCharCode(e.which);
       bindings[c](editor);
     };
   }
@@ -185,6 +185,9 @@
     40 : '<DOWN>',
     46 : '<DELETE>'
   };
+  for (var i=1; i<124; i++) {
+    SPECIAL_KEY_STRINGS[111 + i] = '<F' + i + '>';
+  }
 
   function keyStringFromCode(charCode) {
     if (typeof SPECIAL_KEY_STRINGS[charCode] !== 'undefined') {
