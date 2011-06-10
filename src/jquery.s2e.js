@@ -276,8 +276,7 @@
       this.clear();
       this.context.fillStyle = 'black';
 
-      var x = this.padding;
-      var y = this.padding;
+      var col = 0, row = 0;
       var currentLineCount = 0;
       var contents = editor.contents();
       for (var i=0; i<contents.length; i++) {
@@ -285,37 +284,51 @@
 
         if (c == '\n') {
           if (i == editor.pointPosition()) {
-            this.paintCursor(x, y);
+            this.paintCursor(col, row);
           }
 
-          x = this.padding;
-          y = y + this.lineHeight;
+          col = 0;
+          row++;
           currentLineCount = 0;
         } else {
-          this.context.fillText(c, x, y);
+          this.paintCharacter(c, col, row);
 
           if (i == editor.pointPosition()) {
-            this.paintCursor(x, y);
+            this.paintCursor(col, row);
           }
 
-          x = x + this.charWidth;
+          col++;
           currentLineCount++;
         
           if (currentLineCount == this.lineLength) {
-            this.context.fillStyle = 'grey';
-            this.context.fillRect(x, y-(this.lineHeight / 2), 5, 5);
-            this.context.fillStyle = 'black';
-            x = this.padding;
-            y = y + this.lineHeight;
+            this.paintLineWrappingMarker(col, row);
+            col = 0;
+            row++;
             currentLineCount = 0;
           }
         }
       }
     },
 
-    paintCursor : function(x, y) {
+    paintCharacter : function(character, col, row) {
+      var pixelX = this.columnToX(col);
+      var pixelY = this.rowToY(row);
+      this.context.fillText(character, pixelX, pixelY);
+    },
+
+    paintCursor : function(col, row) {
+      var pixelX = this.columnToX(col);
+      var pixelY = this.rowToY(row);
       this.context.fillStyle = 'red';
-      this.context.fillText('|', x - (this.charWidth / 2), y);
+      this.context.fillText('|', pixelX - (this.charWidth / 2), pixelY);
+      this.context.fillStyle = 'black';
+    },
+
+    paintLineWrappingMarker : function(col, row) {
+      var pixelX = this.columnToX(col);
+      var pixelY = this.rowToY(row);
+      this.context.fillStyle = 'grey';
+      this.context.fillRect(pixelX, pixelY-(this.lineHeight /2), 5, 5);
       this.context.fillStyle = 'black';
     },
 
@@ -332,6 +345,14 @@
       this.lineHeight = face.lineHeight;
       this.context.font = face.font();
       this.lineLength = Math.floor((this.width() - 2 * this.padding) / face.charWidth);
+    },
+
+    columnToX : function(col) {
+      return this.padding + (col * this.charWidth);
+    },
+
+    rowToY : function(row) {
+      return this.padding + (row * this.lineHeight);
     }
   };
 
