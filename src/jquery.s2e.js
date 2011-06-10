@@ -296,12 +296,13 @@
     this.size = size;
     this.textAlign = 'start';
     this.textBaseline = 'middle';
+    this.color = 'black';
     this.charWidth = size * 0.8;
     this.lineHeight = size * 1.6;
   }
 
   Face.prototype = {
-    font : function() {
+    fontString : function() {
       return "" + this.size + "px " + this.family;
     }
   };
@@ -310,19 +311,24 @@
     this.canvas = canvas;
     this.context = canvas.getContext('2d');
     this.padding = 20;
-    this.setFace(new Face('Monaco', 14));
+    this.defaultFace = new Face('Monaco', 14);
   }
 
   Display.prototype = {
     paint : function(editor) {
       this.clear();
-      this.context.fillStyle = 'black';
 
       var col = 0, row = 0;
       var currentLineCount = 0;
       var contents = editor.contents();
+      var currentFace = null;
       for (var i=0; i<contents.length; i++) {
         var c = contents.charAt(i);
+
+        if (this.faceForPosition(i) != currentFace) {
+          currentFace = this.faceForPosition(i);
+          this.applyFace(currentFace);
+        }
 
         if (c == '\n') {
           if (i == editor.pointPosition()) {
@@ -382,10 +388,15 @@
       return $(this.canvas).width();
     },
 
-    setFace : function(face) {
+    faceForPosition : function(position) {
+      return this.defaultFace;
+    },
+
+    applyFace : function(face) {
+      this.context.fillStyle = face.color;
       this.charWidth = face.charWidth;
       this.lineHeight = face.lineHeight;
-      this.context.font = face.font();
+      this.context.font = face.fontString();
       this.lineLength = Math.floor((this.width() - 2 * this.padding) / face.charWidth);
     },
 
