@@ -251,4 +251,58 @@ test("textarea-editor link", function(){
         "It keeps the backing textarea synced to the canvas");
 });
 
-// TODO test default keybindings
+test("positionToLine", function(){
+  editor.insertString("First Line\n");
+  editor.insertString("Second Line\n");
+  editor.insertString("Third Line\n");
+
+  equals(editor.positionToLine(0), 1,
+        "It works on the first character of the buffer.");
+  equals(editor.pointPosition(), 34, "It doesn't move the point");
+  equals(editor.positionToLine(10), 1,
+        "It works on the last character of the first line.");
+  equals(editor.pointPosition(), 34, "It doesn't move the point");
+  equals(editor.positionToLine(11), 2,
+        "It works on the first character of the next line.");
+  equals(editor.pointPosition(), 34, "It doesn't move the point");
+  equals(editor.positionToLine(22), 2,
+        "It works on the last character of the next line.");
+  equals(editor.pointPosition(), 34, "It doesn't move the point");
+  equals(editor.positionToLine(23), 3,
+        "It works on the first character of the last line.");
+  equals(editor.pointPosition(), 34, "It doesn't move the point");
+  equals(editor.positionToLine(33), 3,
+        "It works on the last character of the last line.");
+  equals(editor.pointPosition(), 34, "It doesn't move the point");
+  equals(editor.positionToLine(34), 4,
+        "It works on the last, blank line");
+  equals(editor.pointPosition(), 34, "It doesn't move the point");
+});
+
+test("positionToColumn", function() {
+  editor.insertString("First Line\n");
+  editor.insertString("Second Line\n");
+  editor.insertString("Third Line\n");
+
+  equals(editor.positionToColumn(0), 1,
+        "It works on the first character of the buffer.");
+  equals(editor.pointPosition(), 34, "It doesn't move the point");
+  equals(editor.positionToColumn(10), 11,
+        "It works on the last character of the first line.");
+  equals(editor.pointPosition(), 34, "It doesn't move the point");
+  equals(editor.positionToColumn(11), 1,
+        "It works on the first character of the next line.");
+  equals(editor.pointPosition(), 34, "It doesn't move the point");
+  equals(editor.positionToColumn(22), 12,
+        "It works on the last character of the next line.");
+  equals(editor.pointPosition(), 34, "It doesn't move the point");
+  equals(editor.positionToColumn(23), 1,
+        "It works on the first character of the last line.");
+  equals(editor.pointPosition(), 34, "It doesn't move the point");
+  equals(editor.positionToColumn(33), 11,
+        "It works on the last character of the last line.");
+  equals(editor.pointPosition(), 34, "It doesn't move the point");
+  equals(editor.positionToColumn(34), 1,
+        "It works on the last, blank line");
+  equals(editor.pointPosition(), 34, "It doesn't move the point");
+});

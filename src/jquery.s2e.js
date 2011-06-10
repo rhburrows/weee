@@ -50,6 +50,38 @@
       this.display.paint(this);
     },
 
+    positionToLine : function(position) {
+      var line = 1;
+      var editor = this;
+      this.buffer.restorePointAfter(function() {
+        editor.buffer.movePointTo(0);
+        for(var i=0; i<position; i++) {
+          editor.buffer.pointForward();
+          if (editor.buffer.leftChar() == '\n') {
+            line++;
+          }
+        }
+      });
+      return line;
+    },
+
+    positionToColumn : function(position) {
+      var col = 1;
+      var editor = this;
+      this.buffer.restorePointAfter(function() {
+        editor.buffer.movePointTo(0);
+        for(var i=0; i<position; i++) {
+          editor.buffer.pointForward();
+          if (editor.buffer.leftChar() == '\n') {
+            col = 1;
+          } else {
+            col++;
+          }
+        }
+      });
+      return col;
+    },
+
     bindKey : function(command, f) {
       this.inputManager.bindKey(command, f);
       this.display.paint(this);
@@ -110,6 +142,10 @@
       }
     },
 
+    movePointTo : function(position) {
+      this.movePoint(position - this.presize);
+    },
+
     insertChar : function(character) {
       if (this.presize + this.postsize == this.size) {
         this._expand();
@@ -144,6 +180,12 @@
 
     leftChar : function() {
       return this.buf[this.presize - 1];
+    },
+
+    restorePointAfter : function(f) {
+      var location = this.presize;
+      f();
+      this.movePointTo(location);
     },
 
     _expand : function() {
