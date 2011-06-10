@@ -311,6 +311,7 @@
     this.canvas = canvas;
     this.context = canvas.getContext('2d');
     this.padding = 20;
+    this.faces = [];
     this.defaultFace = new Face('Monaco', 14);
   }
 
@@ -389,7 +390,17 @@
     },
 
     faceForPosition : function(position) {
+      for (var i=0; i<this.faces.length; i++) {
+        var faceApplication = this.faces[i];
+        if (faceApplication[0] <= position && position <= faceApplication[1]) {
+          return faceApplication[2];
+        }
+      }
       return this.defaultFace;
+    },
+
+    setFace : function(from, to, face) {
+      this.faces.push([from, to, face]);
     },
 
     applyFace : function(face) {
@@ -427,6 +438,9 @@
       var options = $.extend({}, $.fn.s2e.defaults, opts);
 
       var d = new Display(canvas);
+      var redFace = new Face('Monaco', 14);
+      redFace.color = 'red';
+      d.setFace(10, 20, redFace);
       var e = new Editor(d, options.initialText);
       textarea.val(options.initialText);
 
