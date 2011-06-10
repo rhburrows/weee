@@ -313,6 +313,7 @@
     this.padding = 20;
     this.faces = [];
     this.defaultFace = new Face('Monaco', 14);
+    this.applyFace(this.defaultFace);
   }
 
   Display.prototype = {
@@ -322,13 +323,11 @@
       var col = 0, row = 0;
       var currentLineCount = 0;
       var contents = editor.contents();
-      var currentFace = null;
       for (var i=0; i<contents.length; i++) {
         var c = contents.charAt(i);
 
-        if (this.faceForPosition(i) != currentFace) {
-          currentFace = this.faceForPosition(i);
-          this.applyFace(currentFace);
+        if (this.faceForPosition(i) != this.currentFace) {
+          this.applyFace(this.faceForPosition(i));
         }
 
         if (c == '\n') {
@@ -368,17 +367,23 @@
     paintCursor : function(col, row) {
       var pixelX = this.columnToX(col);
       var pixelY = this.rowToY(row);
+      var face = this.currentFace;
+
       this.context.fillStyle = 'red';
       this.context.fillText('|', pixelX - (this.charWidth / 2), pixelY);
-      this.context.fillStyle = 'black';
+      
+      this.applyFace(face);
     },
 
     paintLineWrappingMarker : function(col, row) {
       var pixelX = this.columnToX(col);
       var pixelY = this.rowToY(row);
+      var face = this.currentFace;
+
       this.context.fillStyle = 'grey';
       this.context.fillRect(pixelX, pixelY-(this.lineHeight /2), 5, 5);
-      this.context.fillStyle = 'black';
+
+      this.applyFace(face);
     },
 
     clear : function() {
@@ -409,6 +414,7 @@
       this.lineHeight = face.lineHeight;
       this.context.font = face.fontString();
       this.lineLength = Math.floor((this.width() - 2 * this.padding) / face.charWidth);
+      this.currentFace = face;
     },
 
     columnToX : function(col) {
