@@ -249,11 +249,26 @@
     }
   };
 
+  function Face(fontFamily, size) {
+    this.family = fontFamily;
+    this.size = size;
+    this.textAlign = 'start';
+    this.textBaseline = 'middle';
+    this.charWidth = size * 0.8;
+    this.lineHeight = size * 1.6;
+  }
+
+  Face.prototype = {
+    font : function() {
+      return "" + this.size + "px " + this.family;
+    }
+  };
+
   function Display(canvas) {
     this.canvas = canvas;
     this.context = canvas.getContext('2d');
     this.padding = 20;
-    this.setFont(14, 'Courier New');
+    this.setFace(new Face('Monaco', 14));
   }
 
   Display.prototype = {
@@ -312,11 +327,11 @@
       return $(this.canvas).width();
     },
 
-    setFont : function(size, font) {
-      this.charWidth = size * 0.8;
-      this.lineHeight = size * 1.6;
-      this.context.font = "" + size + "px " + font;
-      this.lineLength = Math.floor((this.width() - 2 * this.padding) / this.charWidth);
+    setFace : function(face) {
+      this.charWidth = face.charWidth;
+      this.lineHeight = face.lineHeight;
+      this.context.font = face.font();
+      this.lineLength = Math.floor((this.width() - 2 * this.padding) / face.charWidth);
     }
   };
 
