@@ -59,6 +59,7 @@
       this.buffer.pointForward();
       currentLine++;
     }
+    this.display.paint(this);
   };
  
 })(jQuery);
