@@ -93,3 +93,16 @@ test("positionToColumn", function() {
         "It works on the last, blank line");
   equals(editor.pointPosition(), 34, "It doesn't move the point");
 });
+
+test("gotoLine", function() {
+  editor.gotoLine(3);
+  equals(editor.pointPosition(), 82,
+         "It goes to the first character of the specified line");
+
+  editor.gotoLine(1);
+  equals(editor.pointPosition(), 0, "It works backwards");
+
+  editor.gotoLine(1000);
+  equals(editor.pointPosition(), 98,
+        "If the line specified is too big it goes to the last line");
+});

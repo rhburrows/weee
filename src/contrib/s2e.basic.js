@@ -1,10 +1,14 @@
 (function($){
   var Editor = $.fn.s2e.Editor;
 
-  Editor.prototype.endOfLine = function() {
-    while(this.buffer.rightChar() != '\n' && !this.buffer.postsize == 0) {
-      this.buffer.pointForward();
+  function pointToEndOfLine(buffer) {
+    while(buffer.rightChar() != '\n' && !buffer.postsize == 0) {
+      buffer.pointForward();
     }
+  }
+
+  Editor.prototype.endOfLine = function() {
+    pointToEndOfLine(this.buffer);
     this.display.paint(this);
   };
 
@@ -46,4 +50,15 @@
     });
     return col;
   };
+
+  Editor.prototype.gotoLine = function(line) {
+    var currentLine = 1;
+    this.buffer.movePointTo(0);
+    while(currentLine < line) {
+      pointToEndOfLine(this.buffer);
+      this.buffer.pointForward();
+      currentLine++;
+    }
+  };
+ 
 })(jQuery);
