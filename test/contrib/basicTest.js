@@ -106,3 +106,24 @@ test("gotoLine", function() {
   equals(editor.pointPosition(), 98,
         "If the line specified is too big it goes to the last line");
 });
+
+test("delChar", function() {
+  editor.delChar();
+  equals("h", editor.charAtPoint(),
+        "It deletes the character currently at the point");
+
+  editor.delChar();
+  equals("i", editor.charAtPoint(),
+        "It works even if called multiple times");
+
+  editor.gotoLine(2);
+  editor.movePoint(5);
+  editor.delChar();
+  equals("u", editor.charAtPoint(),
+        "It doesn't have to be at the beginning of the buffer");
+
+  equals("is is just some sample text.\n" +
+         "It shuld help when testing the various functions.\n" +
+         "Blah blah blah!\n", editor.contents(),
+        "It actually alters the contents of the edtior");
+});

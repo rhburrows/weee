@@ -61,5 +61,9 @@
     }
     this.display.paint(this);
   };
- 
+
+  Editor.prototype.delChar = function() {
+    this.buffer.pointForward();
+    this.backspace();
+  };
 })(jQuery);
