@@ -259,19 +259,24 @@
     }
   };
 
-  function Face(fontFamily, size) {
-    this.family = fontFamily;
-    this.size = size;
-    this.textAlign = 'start';
-    this.textBaseline = 'middle';
-    this.color = 'black';
-    this.charWidth = size * 0.8;
-    this.lineHeight = size * 1.6;
+  function Face(options) {
+    this.style      = options['style']       || 'normal';
+    this.variant    = options['variant']     || 'normal';
+    this.weight     = options['weight']      || 'normal';
+    this.size       = options['size']        || 'medium';
+    this.lineHeight = options['line-height'] || 'normal';
+    this.family     = options['family']      || 'monospace';
+    this.color      = options['color']       || 'black';
   }
 
   Face.prototype = {
     fontString : function() {
-      return "" + this.size + "px " + this.family;
+      return this.style + ' ' +
+        this.variant + ' ' +
+        this.weight + ' ' +
+        this.size + '/' +
+        this.lineHeight + ' ' +
+        this.family + ' ';
     }
   };
 
@@ -280,7 +285,7 @@
     this.context = canvas.getContext('2d');
     this.padding = 20;
     this.faces = [];
-    this.defaultFace = new Face('Monaco', 14);
+    this.defaultFace = new Face({ family : 'Monaco', size : 14 });
     this.applyFace(this.defaultFace);
   }
 
@@ -378,10 +383,10 @@
 
     applyFace : function(face) {
       this.context.fillStyle = face.color;
-      this.charWidth = face.charWidth;
-      this.lineHeight = face.lineHeight;
+      this.charWidth = face.size * 0.8;
+      this.lineHeight = face.size * 1.6;
       this.context.font = face.fontString();
-      this.lineLength = Math.floor((this.width() - 2 * this.padding) / face.charWidth);
+      this.lineLength = Math.floor((this.width() - 2 * this.padding) / this.charWidth);
       this.currentFace = face;
     },
 
@@ -412,7 +417,7 @@
       var options = $.extend({}, $.fn.s2e.defaults, opts);
 
       var d = new Display(canvas);
-      var redFace = new Face('Monaco', 14);
+      var redFace = new Face({ family: 'Monaco', size: 14 });
       redFace.color = 'red';
       d.setFace(10, 20, redFace);
       var e = new Editor(d, options.initialText);
@@ -436,6 +441,7 @@
   function insertF(c) {
     return function(e, ev){ e.insertChar(c); };
   }
+
   var defaultKeys = {
     '<LEFT>' : function(editor) {
       editor.pointBackward();
