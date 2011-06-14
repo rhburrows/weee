@@ -2,7 +2,10 @@ SRC_DIR = src
 PKG_DIR = pkg
 
 MODULES = ${SRC_DIR}/core.js \
-	${SRC_DIR}/basic.js
+	${SRC_DIR}/display.js \
+	${SRC_DIR}/input.js \
+	${SRC_DIR}/defaults.js \
+	${SRC_DIR}/basic.js 
 
 VERSION = $(shell cat version.txt)
 S2E = ${PKG_DIR}/jquery.s2e.${VERSION}.js

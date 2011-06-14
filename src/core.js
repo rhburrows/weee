@@ -168,17 +168,6 @@
     }
   };
 
-  function NullDisplay() {}
-  NullDisplay.prototype.paint = function(editor) {
-    // noop display
-  };
-
-  function NullInputManager() {}
-  NullInputManager.prototype = {
-    bindKey : function(command, f) {},
-    handler : function(editor) {}
-  };
-
   $.fn.s2e = function(opts) {
     this.each(function(){
       var textarea = $(this);
@@ -216,52 +205,19 @@
     });
   };
 
-  function insertF(c) {
-    return function(e, ev){ e.insertChar(c); };
-  }
+  function NullDisplay() {}
+  NullDisplay.prototype.paint = function(editor) {};
 
-  var defaultKeys = {
-    '<LEFT>' : function(editor) {
-      editor.pointBackward();
-    },
-
-    '<RIGHT>' : function(editor) {
-      editor.pointForward();
-    },
-
-    '<BACKSPACE>' : function(editor) {
-      editor.backspace();
-    },
-
-    '<SPACE>' : insertF(' '),
-    '<ENTER>' : insertF('\n'),
-    'S-1' : insertF('!'),
-    'S-2' : insertF('@'),
-    'S-3' : insertF('#'),
-    'S-4' : insertF('$'),
-    'S-5' : insertF('%'),
-    'S-6' : insertF('^'),
-    'S-7' : insertF('&'),
-    'S-8' : insertF('*'),
-    'S-9' : insertF('('),
-    'S-0' : insertF(')')
+  function NullInputManager() {}
+  NullInputManager.prototype = {
+    bindKey : function(command, f) {},
+    handler : function(editor) {}
   };
-  // Uppercase and lowercase letters
-  for (var j=65; j<91; j++) {
-    var c = String.fromCharCode(j);
-    defaultKeys[c] = insertF(c.toLowerCase());
-    defaultKeys['S-' + c] = insertF(c);
-  }
-  // 0-9
-  for (var n=48; n<58; n++) {
-    var num = String.fromCharCode(n);
-    defaultKeys[num] = insertF(num);
-  }
 
   // Defaults
   $.fn.s2e.defaults = {
     initialText  : "",
-    keybindings  : defaultKeys,
+    keybindings  : {},
     display      : NullDisplay,
     inputManager : NullInputManager
   };
