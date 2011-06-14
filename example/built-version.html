@@ -1,0 +1,20 @@
+<html>
+  <head>
+    <title>Test (Built version)</title>
+  </head>
+  <body>
+    <textarea id="editor" cols="80" rows="92"></textarea>
+    <script type="text/javascript" src="../lib/jquery-1.6.1.min.js"></script>
+    <script type="text/javascript" src="../pkg/jquery.s2e.0.1.0.js"></script>
+    <script type="text/javascript">
+      // <![CDATA[
+      var initialText = "This is a canvas based javascript text editor.\n" +
+                        "It will hopefully provide and extensible base " +
+                        "that the whole velvet editor can be built upon";
+      $('#editor').s2e({
+        initialText : initialText
+      });
+      // ]]>
+    </script>
+  </body>
+</html>
