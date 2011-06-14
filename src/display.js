@@ -1,8 +1,20 @@
 (function($){
 
-  function Display(canvas) {
-    this.canvas = canvas;
-    this.context = canvas.getContext('2d');
+  function Display(textarea) {
+    this.canvas = document.createElement('canvas');
+    var areawidth  = textarea.width();
+    var areaheight = textarea.height();
+    $(this.canvas).attr('width', '' + areawidth + 'px');
+    $(this.canvas).attr('height', '' + areaheight + 'px');
+    textarea.css({
+      position: 'absolute',
+      left: '-' + (2*areawidth) + 'px',
+      top: '-' + (2*areaheight) + 'px'
+    });
+    textarea.after(this.canvas);
+    $(this.canvas).click(function(){ textarea.focus(); });
+
+    this.context = this.canvas.getContext('2d');
     this.padding = 20;
     this.faces = [];
     this.defaultFace = new Face({ family : 'Monaco', size : 14 });

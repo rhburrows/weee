@@ -171,21 +171,10 @@
   $.fn.s2e = function(opts) {
     this.each(function(){
       var textarea = $(this);
-      var canvas = document.createElement('canvas');
-      var areawidth = textarea.width();
-      var areaheight = textarea.height();
-      $(canvas).attr('width', '' + areawidth + 'px');
-      $(canvas).attr('height', '' + areaheight + 'px');
-      textarea.css({
-        position: 'absolute',
-        left: '-' + (2*areawidth) + 'px',
-        top: '-' + (2*areaheight) + 'px'
-      });
-      textarea.after(canvas);
 
       var options = $.extend({}, $.fn.s2e.defaults, opts);
 
-      var d = new options['display'](canvas);
+      var d = new options['display'](textarea);
       var e = new Editor({ display: d,
                            initialText: options.initialText,
                            inputManager: options.inputManager });
@@ -200,8 +189,6 @@
       });
       textarea.keydown(e.inputManager.handler(e));
       textarea.data('s2e.editor', e);
-
-      $(canvas).click(function(){ textarea.focus(); });
     });
   };
 
