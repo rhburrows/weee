@@ -28,8 +28,14 @@
   }
 
   function endOfLine(e) {
-    while(e.charAtPoint() != '\n' && !e.postsize == 0) {
+    while(e.charAtPoint() != '\n' && e.postsize != 0) {
       pointForward(e);
+    }
+  }
+
+  function beginningOfLine(e) {
+    while(e.previousChar() != '\n' && e.presize != 0) {
+      pointBackward(e);
     }
   }
 
@@ -109,9 +115,61 @@
     },
 
     beginningOfLine : function() {
-      while(this.previousChar() != '\n' && !this.presize == 0) {
-        pointBackward(this);
+      beginningOfLine(this);
+      $(this).trigger('s2e:movePoint');
+    },
+
+    nextLine : function() {
+      var newlineFound = false;
+      for(var i=(this.size - this.postsize); i<this.size; i++) {
+        if (this.buffer[i] == '\n') {
+          newlineFound = true;
+          break;
+        };
       }
+
+      if (newlineFound) {
+        var linePosition = 0;
+        while(this.previousChar() != '\n' && this.presize != 0) {
+          pointBackward(this);
+          linePosition++;
+        }
+
+        endOfLine(this);
+        pointForward(this);
+        while(this.charAtPoint() != '\n' && this.postsize != 0 &&
+              linePosition > 0) {
+          pointForward(this);
+          linePosition--;
+        }
+      }
+      $(this).trigger('s2e:movePoint');
+    },
+
+    previousLine : function() {
+      var newlineFound = false;
+      for(var i=this.presize-1; i>=0; i--) {
+        if(this.buffer[i] == '\n') {
+          newlineFound = true;
+          break;
+        }
+      }
+
+      if (newlineFound) {
+        var linePosition = 0;
+        while (this.previousChar() != '\n' && this.presize != 0) {
+          pointBackward(this);
+          linePosition++;
+        }
+
+        pointBackward(this);
+        beginningOfLine(this);
+        while (this.charAtPoint() != '\n' && linePosition != 0) {
+          pointForward(this);
+          linePosition--;
+        }
+      }
+
       $(this).trigger('s2e:movePoint');
     },
 

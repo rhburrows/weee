@@ -136,6 +136,58 @@ test("beginningOfLine", function(){
         "It works on the second line too");
 });
 
+test("nextLine", function(){
+  var s = "Line One\n" +
+          "Line Two is longer\n" +
+          "Line Three\n";
+  editor.insertString(s);
+  editor.movePointTo(0);
+
+  editor.nextLine();
+  equals(editor.pointPosition(), 9, "It moves the point to the next line");
+
+  editor.endOfLine();
+  editor.nextLine();
+  equals(editor.pointPosition(), 38,
+        "If the next line is shorter it puts it at the end");
+
+  editor.nextLine();
+  equals(editor.pointPosition(), 39, "It moves to empty lines");
+
+  editor.nextLine();
+  equals(editor.pointPosition(), 39, "It does nothing on the last line");
+
+  editor.insertString('hi');
+  editor.movePoint(-2);
+  editor.nextLine();
+  equals(editor.pointPosition(), 39, "It does nothing on the last line");
+});
+
+test("previousLine", function(){
+  var s = "Line One\n" +
+          "Line Two is longer\n" +
+          "Line Three\n";
+  editor.insertString(s);
+
+  editor.previousLine();
+  equals(editor.pointPosition(), 28,
+         "It moves the point to the previous line");
+
+  editor.endOfLine();
+  editor.previousLine();
+  equals(editor.pointPosition(), 19,
+         "It keeps the position from the line before");
+
+  editor.endOfLine();
+  editor.previousLine();
+  equals(editor.pointPosition(), 8,
+         "If the previous line is shorter it puts the point at the end");
+
+  editor.previousLine();
+  equals(editor.pointPosition(), 8,
+         "It does nothing if on the first line");
+});
+
 test("movePoint", function(){
   editor.insertString("Sample Text");
 
@@ -237,7 +289,7 @@ test("s2e:movePoint event", function(){
     ok('s2e:movePoint event was triggered');
   });
 
-  expect(7);
+  expect(9);
   // Each of the below triggers the event incrementing the expect
   editor.pointForward();
   editor.pointBackward();
@@ -246,4 +298,6 @@ test("s2e:movePoint event", function(){
   editor.endOfLine();
   editor.beginningOfLine();
   editor.gotoLine();
+  editor.nextLine();
+  editor.previousLine();
 });
