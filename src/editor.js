@@ -1,121 +1,144 @@
 (function($){
 
   function Editor(initialText) {
-    this.buffer = new Buffer(50);
-    initialText = initialText || "";
+    this.buffer = new Array(50);
+    this.size = 50;
+    this.presize = 0;
+    this.postsize = 0;
 
+    initialText = initialText || "";
     this.insertString(initialText);
-    this.movePoint(-initialText.length);
+    movePoint(this, -initialText.length);
+  }
+
+  function pointForward(e) {
+    if (e.postsize > 0) {
+      e.buffer[e.presize] = e.charAtPoint();
+      e.presize = e.presize + 1;
+      e.postsize = e.postsize - 1;
+    }
+  }
+
+  function pointBackward(e) {
+    if (e.presize > 0) {
+      e.buffer[e.size - e.postsize - 1] = e.previousChar();
+      e.postsize = e.postsize + 1;
+      e.presize = e.presize - 1;
+    }
+  }
+
+  function endOfLine(e) {
+    while(e.charAtPoint() != '\n' && !e.postsize == 0) {
+      pointForward(e);
+    }
+  }
+
+  function movePoint(e, distance) {
+    if (distance > 0) {
+      for (var i = 0; i < distance; i++) {
+        pointForward(e);
+      }
+    } else {
+      var d = -distance;
+      for (var i = 0; i < d; i++) {
+        pointBackward(e);
+      }
+    }
+  }
+
+  function insertChar(e, c) {
+    if (e.presize + e.postsize == e.size) {
+      expandBuffer(e);
+    }
+    e.buffer[e.presize] = c;
+    e.presize = e.presize + 1;
+  }
+
+  function expandBuffer(e) {
+    var newsize = e.size * 2;
+    var newbuf = new Array(newsize);
+    for (var i = 0; i < e.presize; i++) {
+      newbuf[i] = e.buffer[i];
+    }
+    for (var j = 0; j < e.postsize; j++) {
+      newbuf[newsize - j - 1] = e.buffer[e.size - j - 1];
+    }
+    e.buffer = newbuf;
+    e.size = newsize;
   }
 
   Editor.prototype = {
-    insertChar: function(character) {
-      this.buffer.insertChar(character);
-      $(this).trigger('s2e:contentsUpdate');
-    },
-
-    insertString: function(str) {
-      for (var i=0; i<str.length; i++) {
-        var c = str.charAt(i);
-        this.buffer.insertChar(c);
-      }
-      $(this).trigger('s2e:contentsUpdate');
-    },
-
-    backspace: function() {
-      var c = this.buffer.leftChar();
-      this.buffer.backspace();
-      $(this).trigger('s2e:contentsUpdate');
-    },
-
-    pointForward: function() {
-      this.buffer.pointForward();
-      $(this).trigger('s2e:movePoint');
-    },
-
-    pointBackward: function() {
-      this.buffer.pointBackward();
-      $(this).trigger('s2e:movePoint');
-    },
-
-    movePoint : function(distance) {
-      this.buffer.movePoint(distance);
-      $(this).trigger('s2e:movePoint');
-    },
-
-    contents : function() {
-      return this.buffer.toString();
-    },
-
-    pointPosition : function() {
-      return this.buffer.pointPosition();
-    },
-
-    charAtPoint : function() {
-      return this.buffer.rightChar();
-    }
-  };
-
-  $.fn.s2e.config.Editor = Editor;
-
-  function Buffer(size) {
-    this.buf = new Array(size);
-    this.size = size;
-    this.presize = 0;
-    this.postsize = 0;
-  }
-
-  Buffer.prototype = {
-    pointForward : function() {
-      if (this.postsize > 0) {
-        this.buf[this.presize] = this.rightChar();
-        this.presize = this.presize + 1;
-        this.postsize = this.postsize - 1;
-      }
-    },
-
-    pointBackward : function() {
-      if (this.presize > 0) {
-        this.buf[this.size - this.postsize - 1] = this.leftChar();
-        this.postsize = this.postsize + 1;
-        this.presize = this.presize - 1;
-      }
-    },
-
-    movePoint : function(distance) {
-      if (distance > 0) {
-        for (var i = 0; i < distance; i++) {
-          this.pointForward();
-        }
-      } else {
-        var d = -distance;
-        for (var i = 0; i < d; i++) {
-          this.pointBackward();
-        }
-      }
-    },
-
-    movePointTo : function(position) {
-      this.movePoint(position - this.presize);
-    },
-
     insertChar : function(character) {
-      if (this.presize + this.postsize == this.size) {
-        this._expand();
+      insertChar(this, character);
+      $(this).trigger('s2e:contentsUpdate');
+    },
+
+    insertString : function(str) {
+      for (var i = 0; i < str.length; i++) {
+        var c = str.charAt(i);
+        insertChar(this, c);
       }
-      this.buf[this.presize] = character;
-      this.presize = this.presize + 1;
+      $(this).trigger('s2e:contentsUpdate');
     },
 
     backspace : function() {
       if (this.presize > 0) {
         this.presize = this.presize - 1;
       }
+      $(this).trigger('s2e:contentsUpdate');
     },
 
-    toString : function() {
-      var start = this.buf.slice(0, this.presize);
-      var end = this.buf.slice(this.size - this.postsize, this.size);
+    delChar : function() {
+      pointForward(this);
+      this.backspace();
+    },
+
+    pointForward : function() {
+      pointForward(this);
+      $(this).trigger('s2e:movePoint');
+    },
+
+    pointBackward : function() {
+      pointBackward(this);
+      $(this).trigger('s2e:movePoint');
+    },
+
+    endOfLine : function() {
+      endOfLine(this);
+      $(this).trigger('s2e:movePoint');
+    },
+
+    beginningOfLine : function() {
+      while(this.previousChar() != '\n' && !this.presize == 0) {
+        pointBackward(this);
+      }
+      $(this).trigger('s2e:movePoint');
+    },
+
+    gotoLine : function(line) {
+      var currentLine = 1;
+      movePoint(this, -this.presize);
+      while(currentLine < line) {
+        endOfLine(this);
+        pointForward(this);
+        currentLine++;
+      }
+      $(this).trigger('s2e:movePoint');
+    },
+
+    movePoint : function(distance) {
+      movePoint(this, distance);
+      $(this).trigger('s2e:movePoint');
+    },
+
+    movePointTo : function(position) {
+      movePoint(this, position - this.presize);
+      $(this).trigger('s2e:movePoint');
+    },
+
+    contents : function() {
+      var start = this.buffer.slice(0, this.presize);
+      var end = this.buffer.slice(this.size - this.postsize, this.size);
       return start.join('') + end.join('');
     },
 
@@ -123,36 +146,22 @@
       return this.presize;
     },
 
-    rightChar : function() {
+    charAtPoint : function() {
       if (this.postsize > 0) {
-        return this.buf[this.size - this.postsize];
+        return this.buffer[this.size - this.postsize];
       } else {
         return "";
       }
     },
 
-    leftChar : function() {
-      return this.buf[this.presize - 1];
-    },
-
-    restorePointAfter : function(f) {
-      var location = this.presize;
-      f();
-      this.movePointTo(location);
-    },
-
-    _expand : function() {
-      var newsize = this.size * 2;
-      var newbuf = new Array(newsize);
-      for (var i = 0; i < this.presize; i++) {
-        newbuf[i] = this.buf[i];
+    previousChar : function() {
+      if (this.presize > 0) {
+        return this.buffer[this.presize - 1];
+      } else {
+        return "";
       }
-      for (var j = 0; j < this.postsize; j++) {
-        newbuf[newsize - j - 1] = this.buf[this.size - j - 1];
-      }
-      this.buf = newbuf;
-      this.size = newsize;
     }
   };
 
+  $.fn.s2e.config.Editor = Editor;
 })(jQuery);

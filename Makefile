@@ -3,7 +3,6 @@ PKG_DIR = pkg
 
 MODULES = ${SRC_DIR}/core.js \
         ${SRC_DIR}/editor.js \
-	${SRC_DIR}/basic.js \
 	${SRC_DIR}/display.js \
 	${SRC_DIR}/input.js \
 	${SRC_DIR}/defaults.js \
