@@ -127,3 +127,14 @@ test("delChar", function() {
          "Blah blah blah!\n", editor.contents(),
         "It actually alters the contents of the edtior");
 });
+
+test("s2e:movePoint event", function(){
+  $(editor).bind('s2e:movePoint', function(){
+    ok('s2e:movePoint event triggered.');
+  });
+
+  expect(3);
+  editor.endOfLine();
+  editor.beginningOfLine();
+  editor.gotoLine();
+});

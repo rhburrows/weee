@@ -1,6 +1,5 @@
 (function($){
   function Editor(options) {
-    this.display = options.display;
     this.buffer = new Buffer(50);
     this.inputManager = new options['inputManager'](this);
     this.insertString(options.initialText);
@@ -11,7 +10,6 @@
     insertChar: function(character) {
       this.buffer.insertChar(character);
       $(this).trigger('s2e:contentsUpdate');
-      this.display.paint(this);
     },
 
     insertString: function(str) {
@@ -20,37 +18,31 @@
         this.buffer.insertChar(c);
       }
       $(this).trigger('s2e:contentsUpdate');
-      this.display.paint(this);
     },
 
     backspace: function() {
       var c = this.buffer.leftChar();
       this.buffer.backspace();
       $(this).trigger('s2e:contentsUpdate');
-      this.display.paint(this);
     },
 
     pointForward: function() {
       this.buffer.pointForward();
       $(this).trigger('s2e:movePoint');
-      this.display.paint(this);
     },
 
     pointBackward: function() {
       this.buffer.pointBackward();
       $(this).trigger('s2e:movePoint');
-      this.display.paint(this);
     },
 
     movePoint : function(distance) {
       this.buffer.movePoint(distance);
       $(this).trigger('s2e:movePoint');
-      this.display.paint(this);
     },
 
     bindKey : function(command, f) {
       this.inputManager.bindKey(command, f);
-      this.display.paint(this);
     },
 
     contents : function() {
@@ -170,8 +162,7 @@
       var options = $.extend({}, $.fn.s2e.defaults, opts);
 
       var d = new options['display'](textarea);
-      var e = new Editor({ display: d,
-                           initialText: options.initialText,
+      var e = new Editor({ initialText: options.initialText,
                            inputManager: options.inputManager });
       textarea.val(options.initialText);
 
@@ -180,7 +171,10 @@
       });
 
       $(e).bind('s2e:contentsUpdate', function(ev) {
-         textarea.val(e.contents());
+        textarea.val(e.contents());
+      });
+      $(e).bind('s2e:movePoint s2e:contentsUpdate', function(ev) {
+        d.paint(e);
       });
       textarea.keydown(e.inputManager.handler(e));
       textarea.data('s2e.editor', e);

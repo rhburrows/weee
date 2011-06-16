@@ -9,14 +9,14 @@
 
   Editor.prototype.endOfLine = function() {
     pointToEndOfLine(this.buffer);
-    this.display.paint(this);
+    $(this).trigger('s2e:movePoint');
   };
 
   Editor.prototype.beginningOfLine = function() {
     while(this.buffer.leftChar() != '\n' && !this.buffer.presize == 0) {
       this.buffer.pointBackward();
     }
-    this.display.paint(this);
+    $(this).trigger('s2e:movePoint');
   };
 
   Editor.prototype.positionToLine = function(position) {
@@ -59,7 +59,7 @@
       this.buffer.pointForward();
       currentLine++;
     }
-    this.display.paint(this);
+    $(this).trigger('s2e:movePoint');
   };
 
   Editor.prototype.delChar = function() {
