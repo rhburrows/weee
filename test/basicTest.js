@@ -1,11 +1,9 @@
-module("s2e.basic", {
+module("basic", {
   setup : function() {
-    $('#editor').s2e({
-      initialText : "This is just some sample text.\n" +
-                    "It should help when testing the various functions.\n" +
-                    "Blah blah blah!\n"
-    });
-    editor = $('#editor').data('s2e.editor');
+    editor = new $.fn.s2e.config.Editor("This is just some sample text.\n" +
+                                        "It should help when testing the" +
+                                        " various functions.\n" +
+                                        "Blah blah blah!\n");
   }
 });
 
