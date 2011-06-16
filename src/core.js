@@ -33,6 +33,10 @@
       });
       d.paint(e);
 
+      $(d).bind('s2e:click', function(ev) {
+        e.movePointTo(ev.position);
+      });
+
       textarea.keydown(i.handler(e));
 
       return e;

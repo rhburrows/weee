@@ -12,28 +12,65 @@
       top: '-' + (2*areaheight) + 'px'
     });
     textarea.after(this.canvas);
-    $(this.canvas).click(function(){ textarea.focus(); });
+    $(this.canvas).click(clickHandler(textarea, this));
 
     this.context = this.canvas.getContext('2d');
     this.padding = 20;
     this.faces = [];
     this.defaultFace = new Face({ family : 'Monaco', size : 14 });
     this.applyFace(this.defaultFace);
+    // Used for line wrapping. Messy? Yes
+    this.lineLengths = [];
+  }
+
+  function clickHandler(textarea, display) {
+    return function(ev) {
+      $(textarea).focus();
+      var e =jQuery.Event('s2e:click');
+      e.pageX = ev.pageX;
+      e.pageY = ev.pageY;
+      e.position = clickToPosition(display, e.pageX, e.pageY);
+      $(display).trigger(e);
+    };
+  }
+
+  function clickToPosition(display, x, y) {
+    var line = yToLine(display, y);
+    var position = 0, i = 0;
+    while (i < line - 1) {
+      position += display.lineLengths[i];
+      line = line - Math.ceil(display.lineLengths[i] / display.lineLength);
+    }
+    var col = xToCol(display, x);
+    return position + (col - 1);
+  }
+
+  function yToLine(display, y) {
+    var adjustedY = y - $(display.canvas).position().top;
+    return Math.floor(adjustedY / display.lineHeight) + 1;
+  }
+
+  function xToCol(display, x) {
+    var adjustedX = x - $(display.canvas).position().left;
+    return Math.floor((adjustedX - display.padding) / display.charWidth) + 1;
   }
 
   Display.prototype = {
     paint : function(editor) {
       this.clear();
 
-      var col = 0, row = 0;
+      var col = 0, row = 0, line = 0;
       var currentLineCount = 0;
       var contents = editor.contents();
+      this.lineLengths[line] = 0;
       for (var i=0; i<contents.length; i++) {
         var c = contents.charAt(i);
 
         if (this.faceForPosition(i) != this.currentFace) {
           this.applyFace(this.faceForPosition(i));
         }
+
+        this.lineLengths[line]++;
 
         if (c == '\n') {
           if (i == editor.pointPosition()) {
@@ -42,6 +79,8 @@
 
           col = 0;
           row++;
+          line++;
+          this.lineLengths[line] = 0;
           currentLineCount = 0;
         } else {
           this.paintCharacter(c, col, row);
