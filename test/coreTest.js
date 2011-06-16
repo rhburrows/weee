@@ -126,3 +126,15 @@ test("s2e:contentsUpdate event", function(){
   editor.insertString('Hello!');
   editor.backspace();
 });
+
+test("s2e:movePoint event", function(){
+  $(editor).bind('s2e:movePoint', function(e){
+    ok('s2e:movePoint event was triggered');
+  });
+
+  expect(3);
+  // Each of the below triggers the event incrementing the expect
+  editor.pointForward();
+  editor.pointBackward();
+  editor.movePoint(10);
+});

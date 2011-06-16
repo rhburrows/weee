@@ -32,16 +32,19 @@
 
     pointForward: function() {
       this.buffer.pointForward();
+      $(this).trigger('s2e:movePoint');
       this.display.paint(this);
     },
 
     pointBackward: function() {
       this.buffer.pointBackward();
+      $(this).trigger('s2e:movePoint');
       this.display.paint(this);
     },
 
     movePoint : function(distance) {
       this.buffer.movePoint(distance);
+      $(this).trigger('s2e:movePoint');
       this.display.paint(this);
     },
 
