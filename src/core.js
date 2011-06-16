@@ -1,6 +1,5 @@
 (function($){
   function Editor(options) {
-    this.afterUpdateCallbacks = [];
     this.display = options.display;
     this.buffer = new Buffer(50);
     this.inputManager = new options['inputManager'](this);
@@ -11,9 +10,7 @@
   Editor.prototype = {
     insertChar: function(character) {
       this.buffer.insertChar(character);
-      for (var i=0; i<this.afterUpdateCallbacks.length; i++) {
-        this.afterUpdateCallbacks[i](character);
-      }
+      $(this).trigger('s2e:contentsUpdate');
       this.display.paint(this);
     },
 
@@ -21,19 +18,15 @@
       for (var i=0; i<str.length; i++) {
         var c = str.charAt(i);
         this.buffer.insertChar(c);
-        for (var j=0; j<this.afterUpdateCallbacks.length; j++) {
-          this.afterUpdateCallbacks[j](c);
-        }
       }
+      $(this).trigger('s2e:contentsUpdate');
       this.display.paint(this);
     },
 
     backspace: function() {
       var c = this.buffer.leftChar();
       this.buffer.backspace();
-      for (var i=0; i<this.afterUpdateCallbacks.length; i++) {
-        this.afterUpdateCallbacks[i](c);
-      }
+      $(this).trigger('s2e:contentsUpdate');
       this.display.paint(this);
     },
 
@@ -67,11 +60,6 @@
 
     charAtPoint : function() {
       return this.buffer.rightChar();
-    },
-
-    // callbacks for client code
-    afterUpdate : function(f) {
-      this.afterUpdateCallbacks.push(f);
     }
   };
 
@@ -188,8 +176,8 @@
         e.bindKey(key, binding);
       });
 
-      e.afterUpdate(function(c) {
-        textarea.val(e.contents());
+      $(e).bind('s2e:contentsUpdate', function(ev) {
+         textarea.val(e.contents());
       });
       textarea.keydown(e.inputManager.handler(e));
       textarea.data('s2e.editor', e);

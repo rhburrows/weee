@@ -115,27 +115,14 @@ test("textarea-editor link", function(){
         "It keeps the backing textarea synced to the canvas");
 });
 
-test("afterUpdate", function() {
-  var callbackCountOne = 0;
-  editor.afterUpdate(function(c){
-    callbackCountOne++;
+test("s2e:contentsUpdate event", function(){
+  $(editor).bind('s2e:contentsUpdate', function(e){
+    ok('s2e:contentsUpdate event was triggered');
   });
-  editor.insertChar('a');
-  equals(callbackCountOne, 1, "It calls the callbacks after insertChar");
 
-  var callbackCountTwo = 0;
-  editor.afterUpdate(function(c){
-    callbackCountTwo++;
-  });
-  editor.insertChar('b');
-  equals(callbackCountTwo, 1, "It works with multiple callbacks");
-  equals(callbackCountOne, 2, "It doesn't overwrite existing callbacks");
-
-  editor.insertString('cdefg');
-  equals(callbackCountOne, 7, "It is called multiple times with insertString");
-  equals(callbackCountTwo, 6, "It is called multiple times with insertString");
-
+  expect(3);
+  // Each of the below triggers the event incrementing the expect
+  editor.insertChar('A');
+  editor.insertString('Hello!');
   editor.backspace();
-  equals(callbackCountOne, 8, "It is called with backspace");
-  equals(callbackCountTwo, 7, "It is called with backspace");
 });
