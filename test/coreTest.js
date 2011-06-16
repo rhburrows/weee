@@ -108,16 +108,23 @@ test("charAtPoint", function(){
   equals(editor.charAtPoint(), "H");
 });
 
-test("afterInsert", function() {
+test("textarea-editor link", function(){
+  editor.insertString("Some Text");
+
+  equals(textarea.val(), "Some Text",
+        "It keeps the backing textarea synced to the canvas");
+});
+
+test("afterUpdate", function() {
   var callbackCountOne = 0;
-  editor.afterInsert(function(c){
+  editor.afterUpdate(function(c){
     callbackCountOne++;
   });
   editor.insertChar('a');
   equals(callbackCountOne, 1, "It calls the callbacks after insertChar");
 
   var callbackCountTwo = 0;
-  editor.afterInsert(function(c){
+  editor.afterUpdate(function(c){
     callbackCountTwo++;
   });
   editor.insertChar('b');
@@ -127,11 +134,8 @@ test("afterInsert", function() {
   editor.insertString('cdefg');
   equals(callbackCountOne, 7, "It is called multiple times with insertString");
   equals(callbackCountTwo, 6, "It is called multiple times with insertString");
-});
 
-test("textarea-editor link", function(){
-  editor.insertString("Some Text");
-
-  equals(textarea.val(), "Some Text",
-        "It keeps the backing textarea synced to the canvas");
+  editor.backspace();
+  equals(callbackCountOne, 8, "It is called with backspace");
+  equals(callbackCountTwo, 7, "It is called with backspace");
 });
