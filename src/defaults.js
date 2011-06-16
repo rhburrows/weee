@@ -27,7 +27,31 @@
     'S-7' : insertF('&'),
     'S-8' : insertF('*'),
     'S-9' : insertF('('),
-    'S-0' : insertF(')')
+    'S-0' : insertF(')'),
+
+    'C-f' : function(editor) {
+      editor.pointForward();
+    },
+
+    'C-b' : function(editor) {
+      editor.pointBackward();
+    },
+
+    'C-e' : function(editor) {
+      editor.endOfLine();
+    },
+
+    'C-a' : function(editor) {
+      editor.beginningOfLine();
+    },
+
+    'C-n' : function(editor) {
+      editor.nextLine();
+    },
+
+    'C-p' : function(editor) {
+      editor.previousLine();
+    }
   };
   // Uppercase and lowercase letters
   for (var j=65; j<91; j++) {
