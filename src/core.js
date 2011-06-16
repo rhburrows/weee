@@ -1,7 +1,6 @@
 (function($){
   function Editor(options) {
     this.buffer = new Buffer(50);
-    this.inputManager = new options['inputManager'](this);
     this.insertString(options.initialText);
     this.movePoint(-options.initialText.length);
   }
@@ -39,10 +38,6 @@
     movePoint : function(distance) {
       this.buffer.movePoint(distance);
       $(this).trigger('s2e:movePoint');
-    },
-
-    bindKey : function(command, f) {
-      this.inputManager.bindKey(command, f);
     },
 
     contents : function() {
@@ -162,12 +157,12 @@
       var options = $.extend({}, $.fn.s2e.defaults, opts);
 
       var d = new options['display'](textarea);
-      var e = new Editor({ initialText: options.initialText,
-                           inputManager: options.inputManager });
+      var e = new Editor({ initialText: options.initialText });
+      var i = new options['inputManager'](e);
       textarea.val(options.initialText);
 
       $.each(options.keybindings, function(key, binding){
-        e.bindKey(key, binding);
+        i.bindKey(key, binding);
       });
 
       $(e).bind('s2e:contentsUpdate', function(ev) {
@@ -176,7 +171,9 @@
       $(e).bind('s2e:movePoint s2e:contentsUpdate', function(ev) {
         d.paint(e);
       });
-      textarea.keydown(e.inputManager.handler(e));
+      d.paint(e);
+
+      textarea.keydown(i.handler(e));
       textarea.data('s2e.editor', e);
     });
   };
