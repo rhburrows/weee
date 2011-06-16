@@ -12,6 +12,14 @@
       editor.pointForward();
     },
 
+    '<DOWN>' : function(editor) {
+      editor.nextLine();
+    },
+
+    '<UP>' : function(editor) {
+      editor.previousLine();
+    },
+
     '<BACKSPACE>' : function(editor) {
       editor.backspace();
     },
