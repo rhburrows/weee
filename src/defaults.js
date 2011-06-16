@@ -41,5 +41,5 @@
     defaultKeys[num] = insertF(num);
   }
 
-  $.fn.s2e.defaults.keybindings = defaultKeys;
+  $.fn.s2e.config.keybindings = defaultKeys;
 })(jQuery);

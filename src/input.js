@@ -84,5 +84,5 @@
     }
   };
 
-  $.fn.s2e.defaults.inputManager = InputManager;
+  $.fn.s2e.config.InputManager = InputManager;
 })(jQuery);

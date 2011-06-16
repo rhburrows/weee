@@ -152,5 +152,5 @@
     }
   };
 
-  $.fn.s2e.defaults.display = Display;
+  $.fn.s2e.config.Display = Display;
 })(jQuery);

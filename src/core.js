@@ -153,15 +153,15 @@
   $.fn.s2e = function(opts) {
     this.each(function(){
       var textarea = $(this);
+      var options = $.extend({ initialText: "" }, opts);
 
-      var options = $.extend({}, $.fn.s2e.defaults, opts);
+      var d = new $.fn.s2e.config.Display(textarea);
+      var e = new $.fn.s2e.config.Editor(options);
+      var i = new $.fn.s2e.config.InputManager(e);
 
-      var d = new options['display'](textarea);
-      var e = new Editor({ initialText: options.initialText });
-      var i = new options['inputManager'](e);
       textarea.val(options.initialText);
 
-      $.each(options.keybindings, function(key, binding){
+      $.each($.fn.s2e.config.keybindings, function(key, binding){
         i.bindKey(key, binding);
       });
 
@@ -187,14 +187,12 @@
     handler : function(editor) {}
   };
 
-  // Defaults
-  $.fn.s2e.defaults = {
+  $.fn.s2e.config = {
     initialText  : "",
     keybindings  : {},
-    display      : NullDisplay,
-    inputManager : NullInputManager
+    Display      : NullDisplay,
+    InputManager : NullInputManager,
+    Editor       : Editor,
+    keybindings  : {}
   };
-
-  // Export extension points
-  $.fn.s2e.Editor = Editor;
 })(jQuery);

@@ -1,5 +1,5 @@
 (function($){
-  var Editor = $.fn.s2e.Editor;
+  var Editor = $.fn.s2e.config.Editor;
 
   function pointToEndOfLine(buffer) {
     while(buffer.rightChar() != '\n' && !buffer.postsize == 0) {
