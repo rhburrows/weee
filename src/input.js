@@ -1,5 +1,5 @@
 (function($){
-  function InputManager(editor) {
+  function InputManager() {
     this.bindings = {};
   }
 

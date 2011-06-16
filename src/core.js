@@ -16,7 +16,7 @@
 
       var d = new $.fn.s2e.config.Display(textarea);
       var e = new $.fn.s2e.config.Editor(options.initialText);
-      var i = new $.fn.s2e.config.InputManager(e);
+      var i = new $.fn.s2e.config.InputManager();
 
       textarea.val(options.initialText);
 
