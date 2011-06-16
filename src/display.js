@@ -61,6 +61,10 @@
           }
         }
       }
+
+      if (editor.pointPosition() == contents.length) {
+        this.paintCursor(col, row);
+      }
     },
 
     paintCharacter : function(character, col, row) {
