@@ -102,8 +102,8 @@
     backspace : function() {
       if (this.presize > 0) {
         this.presize = this.presize - 1;
+        $(this).trigger('s2e:contentsUpdate');
       }
-      $(this).trigger('s2e:contentsUpdate');
     },
 
     delChar : function() {

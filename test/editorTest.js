@@ -6,6 +6,12 @@ module("editor", {
 
 var editor;
 
+function countEvent(event) {
+  $(editor).bind(event, function(){
+    ok(event + " called!");
+  });
+}
+
 test("insertChar", function(){
   editor.insertChar('a');
   equals(editor.contents(), "a", "it adds the character");
@@ -16,6 +22,14 @@ test("insertChar", function(){
   editor.pointBackward();
   editor.insertChar('c');
   equals(editor.contents(), "acb", "it is inserted directly after the point");
+});
+
+test("insertChar events", function(){
+  countEvent('s2e:contentsUpdate');
+
+  expect(2);
+  editor.insertChar('a');
+  editor.insertChar('b');
 });
 
 test("insertString", function(){
@@ -32,6 +46,14 @@ test("insertString", function(){
         "it is inserted directly after the point");
 });
 
+test("insertString events", function(){
+  countEvent('s2e:contentsUpdate');
+
+  expect(2);
+  editor.insertString("line 1\n");
+  editor.insertString("line 2\n");
+});
+
 test("backspace", function(){
   editor.insertString("Teswtz");
 
@@ -42,6 +64,16 @@ test("backspace", function(){
   editor.backspace();
   equals(editor.contents(), "Test",
          "it remove the character directly before the point");
+});
+
+test("backspace events", function(){
+  editor.insertString('Hi');
+  countEvent('s2e:contentsUpdate');
+
+  expect(2);
+  editor.backspace();
+  editor.backspace();
+  editor.backspace();
 });
 
 test("delChar", function() {
@@ -64,6 +96,18 @@ test("delChar", function() {
   equals("is isa string", editor.contents(), "It alters the editor's contents");
 });
 
+test("delChar events", function(){
+  editor.insertString("Hi");
+  editor.movePointTo(0);
+
+  countEvent('s2e:contentsUpdate');
+
+  expect(2);
+  editor.delChar();
+  editor.delChar();
+  editor.delChar();
+});
+
 test("pointForward", function(){
   editor.insertString("Hi");
   editor.movePoint(-2);
@@ -84,9 +128,7 @@ test("pointForward events", function(){
   editor.movePoint(-2);
 
   expect(2);
-  $(editor).bind('s2e:movePoint', function(ev){
-    ok("s2e:movePoint called!");
-  });
+  countEvent('s2e:movePoint');
 
   editor.pointForward();
   editor.pointForward();
@@ -111,9 +153,7 @@ test("pointBackward", function(){
 test("pointBackward events", function(){
   editor.insertString("Hi");
 
-  $(editor).bind('s2e:movePoint', function(ev){
-    ok("s2e:movePoint called!");
-  });
+  countEvent('s2e:movePoint');
 
   expect(2);
   editor.pointBackward();
@@ -146,9 +186,7 @@ test("endOfLine events", function(){
   editor.insertString("text\ntext");
   editor.movePointTo(0);
 
-  $(editor).bind('s2e:movePoint', function(ev){
-    ok("s2e:movePoint called!");
-  });
+  countEvent('s2e:movePoint');
 
   expect(1);
   editor.endOfLine();
@@ -180,9 +218,7 @@ test("beginningOfLine", function(){
 test("beginningOfLine", function(){
   editor.insertString("text\ntext");
 
-  $(editor).bind('s2e:movePoint', function(ev){
-    ok("s2e:movePoint called!");
-  });
+  countEvent('s2e:movePoint');
 
   expect(1);
   editor.beginningOfLine();
@@ -220,9 +256,7 @@ test("nextLine", function(){
   editor.insertString("text\ntext\ntext");
   editor.movePointTo(0);
 
-  $(editor).bind('s2e:movePoint', function(ev){
-    ok("s2e:movePoint called!");
-  });
+  countEvent('s2e:movePoint');
 
   expect(2);
   editor.nextLine();
@@ -258,9 +292,7 @@ test("previousLine", function(){
 test("previousLine", function(){
   editor.insertString("text\ntext\ntext");
 
-  $(editor).bind('s2e:movePoint', function(ev){
-    ok("s2e:movePoint called!");
-  });
+  countEvent('s2e:movePoint');
 
   expect(2);
   editor.previousLine();
@@ -289,9 +321,7 @@ test("movePoint", function(){
 test("movePoint events", function(){
   editor.insertString("Test");
 
-  $(editor).bind('s2e:movePoint', function(){
-    ok("s2e:movePoint called!");
-  });
+  countEvent('s2e:movePoint');
 
   expect(2);
   editor.movePoint(-2);
@@ -320,9 +350,7 @@ test("movePointTo", function(){
 test("movePointTo events", function(){
   editor.insertString("Sample");
 
-  $(editor).bind('s2e:movePoint', function(ev){
-    ok("s2e:movePoint called!");
-  });
+  countEvent('s2e:movePoint');
 
   expect(2);
   editor.movePointTo(2);
@@ -352,9 +380,7 @@ test("gotoLine", function() {
 test("gotoLine", function(){
   editor.insertString("text\ntext");
 
-  $(editor).bind('s2e:movePoint', function(){
-    ok("s2e:movePoint called!");
-  });
+  countEvent('s2e:movePoint');
 
   expect(2);
   editor.gotoLine(1);
@@ -388,19 +414,6 @@ test("previousChar", function(){
   editor.pointBackward();
   equals(editor.previousChar(), "",
          "It returns an empty string if at the beginning of the buffer");
-});
-
-test("s2e:contentsUpdate event", function(){
-  $(editor).bind('s2e:contentsUpdate', function(e){
-    ok('s2e:contentsUpdate event was triggered');
-  });
-
-  expect(4);
-  // Each of the below triggers the event incrementing the expect
-  editor.insertChar('A');
-  editor.insertString('Hello!');
-  editor.backspace();
-  editor.delChar();
 });
 
 test("s2e:movePoint event", function(){
