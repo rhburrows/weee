@@ -1,23 +1,13 @@
 (function($){
 
-  function Display(textarea) {
+  function Display(width, height) {
     this.canvas = document.createElement('canvas');
-    var areawidth  = textarea.width();
-    var areaheight = textarea.height();
-    $(this.canvas).attr('width', '' + areawidth + 'px');
-    $(this.canvas).attr('height', '' + areaheight + 'px');
-    textarea.css({
-      position: 'absolute',
-      left: '-' + (2*areawidth) + 'px',
-      top: '-' + (2*areaheight) + 'px'
-    });
-    textarea.after(this.canvas);
+    $(this.canvas).attr('width', '' + width + 'px');
+    $(this.canvas).attr('height', '' + height + 'px');
 
-    $(this.canvas).click(mouseHandler('s2e:click', textarea, this));
-    $(this.canvas).mousedown(mouseHandler('s2e:mousedown', textarea, this));
-    $(this.canvas).mouseup(mouseHandler('s2e:mouseup', textarea, this));
-
-    $(this).bind('s2e:click', function(){ textarea.focus(); });
+    $(this.canvas).click(mouseHandler('s2e:click', this));
+    $(this.canvas).mousedown(mouseHandler('s2e:mousedown', this));
+    $(this.canvas).mouseup(mouseHandler('s2e:mouseup', this));
 
     this.context = this.canvas.getContext('2d');
     this.padding = 20;
@@ -28,7 +18,7 @@
     this.lineLengths = [];
   }
 
-  function mouseHandler(event, textarea, display) {
+  function mouseHandler(event, display) {
     return function(ev) {
       var e = $.Event(event);
       e.pageX = ev.pageX;

@@ -14,32 +14,45 @@
       var textarea = $(this);
       var options = $.extend({ initialText: "" }, opts);
 
-      var d = new $.fn.s2e.config.Display(textarea);
-      var e = new $.fn.s2e.config.Editor(options.initialText);
-      var i = new $.fn.s2e.config.InputManager();
+      var width = textarea.width();
+      var height = textarea.height();
 
+      var display = new $.fn.s2e.config.Display(width, height);
+      var editor = new $.fn.s2e.config.Editor(options.initialText);
+      var inputManager = new $.fn.s2e.config.InputManager();
+
+      $(display).bind('s2e:click', function(ev){
+        textarea.focus();
+      });
+
+      textarea.css({
+        position: 'absolute',
+        left: '-' + (2*width) + 'px',
+        top: '-' + (2*height) + 'px'
+      });
       textarea.val(options.initialText);
+      textarea.after(display.canvas);
 
       $.each($.fn.s2e.config.keybindings, function(key, binding){
-        i.bindKey(key, binding);
+        inputManager.bindKey(key, binding);
       });
 
-      $(e).bind('s2e:contentsUpdate', function(ev) {
-        textarea.val(e.contents());
+      $(editor).bind('s2e:contentsUpdate', function(ev) {
+        textarea.val(editor.contents());
       });
 
-      $(e).bind('s2e:movePoint s2e:contentsUpdate', function(ev) {
-        d.paint(e);
+      $(editor).bind('s2e:movePoint s2e:contentsUpdate', function(ev) {
+        display.paint(editor);
       });
-      d.paint(e);
+      display.paint(editor);
 
-      $(d).bind('s2e:click', function(ev) {
-        e.movePointTo(ev.position);
+      $(display).bind('s2e:click', function(ev) {
+        editor.movePointTo(ev.position);
       });
 
-      textarea.keydown(i.handler(e));
+      textarea.keydown(inputManager.handler(editor));
 
-      return e;
+      return editor;
     });
   };
 
