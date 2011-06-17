@@ -98,6 +98,7 @@
       if (editor.pointPosition() == contents.length) {
         this.paintCursor(col, row);
       }
+      $(this).trigger('s2e:repaint');
     },
 
     paintCharacter : function(character, col, row) {
