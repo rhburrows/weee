@@ -13,9 +13,11 @@
     });
     textarea.after(this.canvas);
 
-    $(this.canvas).click(clickHandler(textarea, this));
-    $(this.canvas).mousedown(mouseDownHandler(textarea, this));
-    $(this.canvas).mouseup(mouseUpHandler(textarea, this));
+    $(this.canvas).click(mouseHandler('s2e:click', textarea, this));
+    $(this.canvas).mousedown(mouseHandler('s2e:mousedown', textarea, this));
+    $(this.canvas).mouseup(mouseHandler('s2e:mouseup', textarea, this));
+
+    $(this).bind('s2e:click', function(){ textarea.focus(); });
 
     this.context = this.canvas.getContext('2d');
     this.padding = 20;
@@ -26,30 +28,9 @@
     this.lineLengths = [];
   }
 
-  function clickHandler(textarea, display) {
+  function mouseHandler(event, textarea, display) {
     return function(ev) {
-      $(textarea).focus();
-      var e = $.Event('s2e:click');
-      e.pageX = ev.pageX;
-      e.pageY = ev.pageY;
-      e.position = clickToPosition(display, e.pageX, e.pageY);
-      $(display).trigger(e);
-    };
-  }
-
-  function mouseDownHandler(textareaa, display) {
-    return function(ev) {
-      var e = $.Event('s2e:mousedown');
-      e.pageX = ev.pageX;
-      e.pageY = ev.pageY;
-      e.position = clickToPosition(display, e.pageX, e.pageY);
-      $(display).trigger(e);
-    };
-  }
-
-  function mouseUpHandler(textarea, display) {
-    return function(ev) {
-      var e = $.Event('s2e:mouseup');
+      var e = $.Event(event);
       e.pageX = ev.pageX;
       e.pageY = ev.pageY;
       e.position = clickToPosition(display, e.pageX, e.pageY);
