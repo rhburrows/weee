@@ -73,6 +73,15 @@
     e.size = newsize;
   }
 
+  function watchPoint(editor, f) {
+    var oldPoint = editor.pointPosition();
+    f();
+    var newPoint = editor.pointPosition();
+    if (oldPoint != newPoint) {
+      $(editor).trigger('s2e:movePoint');
+    }
+  }
+
   Editor.prototype = {
     insertChar : function(character) {
       insertChar(this, character);
@@ -100,132 +109,115 @@
     },
 
     pointForward : function() {
-      var oldPoint = this.pointPosition();
-      pointForward(this);
-      var newPoint = this.pointPosition();
-      if (oldPoint != newPoint) {
-        $(this).trigger('s2e:movePoint');
-      }
+      var e = this;
+      watchPoint(e, function(){
+        pointForward(e);
+      });
     },
 
     pointBackward : function() {
-      var oldPoint = this.pointPosition();
-      pointBackward(this);
-      var newPoint = this.pointPosition();
-      if (oldPoint != newPoint) {
-        $(this).trigger('s2e:movePoint');
-      }
+      var e = this;
+      watchPoint(e, function(){
+        pointBackward(e);
+      });
     },
 
     endOfLine : function() {
-      var oldPoint = this.pointPosition();
-      endOfLine(this);
-      var newPoint = this.pointPosition();
-      if (oldPoint != newPoint) {
-        $(this).trigger('s2e:movePoint');
-      }
+      var e = this;
+      watchPoint(e, function(){
+        endOfLine(e);
+      });
     },
 
     beginningOfLine : function() {
-      var oldPoint = this.pointPosition();
-      beginningOfLine(this);
-      var newPoint = this.pointPosition();
-      if (oldPoint != newPoint) {
-        $(this).trigger('s2e:movePoint');
-      }
+      var e = this;
+      watchPoint(e, function(){
+        beginningOfLine(e);
+      });
     },
 
     nextLine : function() {
-      var oldPoint = this.pointPosition();
-      var newlineFound = false;
-      for(var i=(this.size - this.postsize); i<this.size; i++) {
-        if (this.buffer[i] == '\n') {
-          newlineFound = true;
-          break;
-        };
-      }
-
-      if (newlineFound) {
-        var linePosition = 0;
-        while(this.previousChar() != '\n' && this.presize != 0) {
-          pointBackward(this);
-          linePosition++;
+      var e = this;
+      watchPoint(e, function(){
+        var newlineFound = false;
+        for(var i=(e.size - e.postsize); i<e.size; i++) {
+          if (e.buffer[i] == '\n') {
+            newlineFound = true;
+            break;
+          };
         }
 
-        endOfLine(this);
-        pointForward(this);
-        while(this.charAtPoint() != '\n' && this.postsize != 0 &&
-              linePosition > 0) {
-          pointForward(this);
-          linePosition--;
+        if (newlineFound) {
+          var linePosition = 0;
+          while(e.previousChar() != '\n' && e.presize != 0) {
+            pointBackward(e);
+            linePosition++;
+          }
+
+          endOfLine(e);
+          pointForward(e);
+          while(e.charAtPoint() != '\n' && e.postsize != 0 &&
+                linePosition > 0) {
+            pointForward(e);
+            linePosition--;
+          }
         }
-      }
-      var newPoint = this.pointPosition();
-      if (oldPoint != newPoint) {
-        $(this).trigger('s2e:movePoint');
-      }
+      });
     },
 
     previousLine : function() {
-      var oldPoint = this.pointPosition();
-      var newlineFound = false;
-      for(var i=this.presize-1; i>=0; i--) {
-        if(this.buffer[i] == '\n') {
-          newlineFound = true;
-          break;
-        }
-      }
-
-      if (newlineFound) {
-        var linePosition = 0;
-        while (this.previousChar() != '\n' && this.presize != 0) {
-          pointBackward(this);
-          linePosition++;
+      var e = this;
+      watchPoint(e, function(){
+        var newlineFound = false;
+        for(var i=e.presize-1; i>=0; i--) {
+          if(e.buffer[i] == '\n') {
+            newlineFound = true;
+            break;
+          }
         }
 
-        pointBackward(this);
-        beginningOfLine(this);
-        while (this.charAtPoint() != '\n' && linePosition != 0) {
-          pointForward(this);
-          linePosition--;
+        if (newlineFound) {
+          var linePosition = 0;
+          while (e.previousChar() != '\n' && e.presize != 0) {
+            pointBackward(e);
+            linePosition++;
+          }
+
+          pointBackward(e);
+          beginningOfLine(e);
+          while (e.charAtPoint() != '\n' && linePosition != 0) {
+            pointForward(e);
+            linePosition--;
+          }
         }
-      }
-      var newPoint = this.pointPosition();
-      if (oldPoint != newPoint) {
-        $(this).trigger('s2e:movePoint');
-      }
+      });
     },
 
     gotoLine : function(line) {
-      var oldPoint = this.pointPosition();
-      var currentLine = 1;
-      movePoint(this, -this.presize);
-      while(currentLine < line) {
-        endOfLine(this);
-        pointForward(this);
-        currentLine++;
-      }
-      var newPoint = this.pointPosition();
-      if (oldPoint != newPoint) {
-        $(this).trigger('s2e:movePoint');
-      }
+      var e = this;
+      watchPoint(e, function(){
+        var currentLine = 1;
+        movePoint(e, -e.presize);
+        while(currentLine < line) {
+          endOfLine(e);
+          pointForward(e);
+          currentLine++;
+        }
+      });
     },
 
     movePoint : function(distance) {
-      var oldPoint = this.pointPosition();
-      movePoint(this, distance);
-      var newPoint = this.pointPosition();
-      if (oldPoint != newPoint) {
-        $(this).trigger('s2e:movePoint');
-      }
+      var e = this;
+      watchPoint(e, function(){
+        movePoint(e, distance);
+      });
     },
 
     movePointTo : function(position) {
-      if (this.pointPosition() == position) {
-        return;
-      }
-      movePoint(this, position - this.presize);
-      $(this).trigger('s2e:movePoint');
+      var e = this;
+      watchPoint(e, function(){
+        movePoint(e, position - e.presize);
+      });
     },
 
     contents : function() {
