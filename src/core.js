@@ -50,6 +50,15 @@
         editor.movePointTo(ev.position);
       });
 
+      // bubble display events through textarea
+      $(display).bind('s2e:click s2e:mousedown s2e:mouseup s2e:repaint', function(e){
+        textarea.trigger(e);
+      });
+      // bubble editor events through textarea
+      $(editor).bind('s2e:movePoint s2e:contentsUpdate', function(e){
+        textarea.trigger(e);
+      });
+
       textarea.keydown(inputManager.handler(editor));
 
       return editor;
