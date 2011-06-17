@@ -79,6 +79,21 @@ test("pointForward", function(){
          "It does nothing if already at the end of the buffer");
 });
 
+test("pointForward events", function(){
+  editor.insertString("Hi");
+  editor.movePoint(-2);
+
+  expect(2);
+  $(editor).bind('s2e:movePoint', function(ev){
+    ok("s2e:movePoint called!");
+  });
+
+  editor.pointForward();
+  editor.pointForward();
+  // This third one won't trigger an event because its already at the end
+  editor.pointForward();
+});
+
 test("pointBackward", function(){
   editor.insertString("Hi");
 
@@ -91,6 +106,19 @@ test("pointBackward", function(){
   editor.pointBackward();
   equals(editor.pointPosition(), 0,
          "It does nothing if already at the beginning of the buffer");
+});
+
+test("pointBackward events", function(){
+  editor.insertString("Hi");
+
+  $(editor).bind('s2e:movePoint', function(ev){
+    ok("s2e:movePoint called!");
+  });
+
+  expect(2);
+  editor.pointBackward();
+  editor.pointBackward();
+  editor.pointBackward();
 });
 
 test("endOfLine", function(){
@@ -114,6 +142,19 @@ test("endOfLine", function(){
         "Calling endOfLine() while at the end of the line does nothing");
 });
 
+test("endOfLine events", function(){
+  editor.insertString("text\ntext");
+  editor.movePointTo(0);
+
+  $(editor).bind('s2e:movePoint', function(ev){
+    ok("s2e:movePoint called!");
+  });
+
+  expect(1);
+  editor.endOfLine();
+  editor.endOfLine();
+});
+
 test("beginningOfLine", function(){
   var s = "This is just some sample text.\n" +
           "It should help when testing the various functions.\n" +
@@ -134,6 +175,18 @@ test("beginningOfLine", function(){
   editor.beginningOfLine();
   equals(editor.pointPosition(), 31,
         "It works on the second line too");
+});
+
+test("beginningOfLine", function(){
+  editor.insertString("text\ntext");
+
+  $(editor).bind('s2e:movePoint', function(ev){
+    ok("s2e:movePoint called!");
+  });
+
+  expect(1);
+  editor.beginningOfLine();
+  editor.beginningOfLine();
 });
 
 test("nextLine", function(){
@@ -163,6 +216,20 @@ test("nextLine", function(){
   equals(editor.pointPosition(), 39, "It does nothing on the last line");
 });
 
+test("nextLine", function(){
+  editor.insertString("text\ntext\ntext");
+  editor.movePointTo(0);
+
+  $(editor).bind('s2e:movePoint', function(ev){
+    ok("s2e:movePoint called!");
+  });
+
+  expect(2);
+  editor.nextLine();
+  editor.nextLine();
+  editor.nextLine();
+});
+
 test("previousLine", function(){
   var s = "Line One\n" +
           "Line Two is longer\n" +
@@ -188,6 +255,19 @@ test("previousLine", function(){
          "It does nothing if on the first line");
 });
 
+test("previousLine", function(){
+  editor.insertString("text\ntext\ntext");
+
+  $(editor).bind('s2e:movePoint', function(ev){
+    ok("s2e:movePoint called!");
+  });
+
+  expect(2);
+  editor.previousLine();
+  editor.previousLine();
+  editor.previousLine();
+});
+
 test("movePoint", function(){
   editor.insertString("Sample Text");
 
@@ -204,6 +284,19 @@ test("movePoint", function(){
   editor.movePoint(-99);
   equals(editor.pointPosition(), 0,
         "It stops at the beginning if it would move past the start");
+});
+
+test("movePoint events", function(){
+  editor.insertString("Test");
+
+  $(editor).bind('s2e:movePoint', function(){
+    ok("s2e:movePoint called!");
+  });
+
+  expect(2);
+  editor.movePoint(-2);
+  editor.movePoint(2);
+  editor.movePoint(1);
 });
 
 test("movePointTo", function(){
@@ -224,6 +317,19 @@ test("movePointTo", function(){
         "It stops at the end if given a position greater than the buffer size");
 });
 
+test("movePointTo events", function(){
+  editor.insertString("Sample");
+
+  $(editor).bind('s2e:movePoint', function(ev){
+    ok("s2e:movePoint called!");
+  });
+
+  expect(2);
+  editor.movePointTo(2);
+  editor.movePointTo(0);
+  editor.movePointTo(0);
+});
+
 test("gotoLine", function() {
   var s = "This is just some sample text.\n" +
           "It should help when testing the various functions.\n" +
@@ -241,6 +347,19 @@ test("gotoLine", function() {
   editor.gotoLine(1000);
   equals(editor.pointPosition(), 98,
         "If the line specified is too big it goes to the last line");
+});
+
+test("gotoLine", function(){
+  editor.insertString("text\ntext");
+
+  $(editor).bind('s2e:movePoint', function(){
+    ok("s2e:movePoint called!");
+  });
+
+  expect(2);
+  editor.gotoLine(1);
+  editor.gotoLine(2);
+  editor.gotoLine(2);
 });
 
 test("charAtPoint", function(){
@@ -282,22 +401,4 @@ test("s2e:contentsUpdate event", function(){
   editor.insertString('Hello!');
   editor.backspace();
   editor.delChar();
-});
-
-test("s2e:movePoint event", function(){
-  $(editor).bind('s2e:movePoint', function(e){
-    ok('s2e:movePoint event was triggered');
-  });
-
-  expect(9);
-  // Each of the below triggers the event incrementing the expect
-  editor.pointForward();
-  editor.pointBackward();
-  editor.movePoint(10);
-  editor.movePointTo(0);
-  editor.endOfLine();
-  editor.beginningOfLine();
-  editor.gotoLine();
-  editor.nextLine();
-  editor.previousLine();
 });

@@ -100,26 +100,43 @@
     },
 
     pointForward : function() {
+      var oldPoint = this.pointPosition();
       pointForward(this);
-      $(this).trigger('s2e:movePoint');
+      var newPoint = this.pointPosition();
+      if (oldPoint != newPoint) {
+        $(this).trigger('s2e:movePoint');
+      }
     },
 
     pointBackward : function() {
+      var oldPoint = this.pointPosition();
       pointBackward(this);
-      $(this).trigger('s2e:movePoint');
+      var newPoint = this.pointPosition();
+      if (oldPoint != newPoint) {
+        $(this).trigger('s2e:movePoint');
+      }
     },
 
     endOfLine : function() {
+      var oldPoint = this.pointPosition();
       endOfLine(this);
-      $(this).trigger('s2e:movePoint');
+      var newPoint = this.pointPosition();
+      if (oldPoint != newPoint) {
+        $(this).trigger('s2e:movePoint');
+      }
     },
 
     beginningOfLine : function() {
+      var oldPoint = this.pointPosition();
       beginningOfLine(this);
-      $(this).trigger('s2e:movePoint');
+      var newPoint = this.pointPosition();
+      if (oldPoint != newPoint) {
+        $(this).trigger('s2e:movePoint');
+      }
     },
 
     nextLine : function() {
+      var oldPoint = this.pointPosition();
       var newlineFound = false;
       for(var i=(this.size - this.postsize); i<this.size; i++) {
         if (this.buffer[i] == '\n') {
@@ -143,10 +160,14 @@
           linePosition--;
         }
       }
-      $(this).trigger('s2e:movePoint');
+      var newPoint = this.pointPosition();
+      if (oldPoint != newPoint) {
+        $(this).trigger('s2e:movePoint');
+      }
     },
 
     previousLine : function() {
+      var oldPoint = this.pointPosition();
       var newlineFound = false;
       for(var i=this.presize-1; i>=0; i--) {
         if(this.buffer[i] == '\n') {
@@ -169,11 +190,14 @@
           linePosition--;
         }
       }
-
-      $(this).trigger('s2e:movePoint');
+      var newPoint = this.pointPosition();
+      if (oldPoint != newPoint) {
+        $(this).trigger('s2e:movePoint');
+      }
     },
 
     gotoLine : function(line) {
+      var oldPoint = this.pointPosition();
       var currentLine = 1;
       movePoint(this, -this.presize);
       while(currentLine < line) {
@@ -181,15 +205,25 @@
         pointForward(this);
         currentLine++;
       }
-      $(this).trigger('s2e:movePoint');
+      var newPoint = this.pointPosition();
+      if (oldPoint != newPoint) {
+        $(this).trigger('s2e:movePoint');
+      }
     },
 
     movePoint : function(distance) {
+      var oldPoint = this.pointPosition();
       movePoint(this, distance);
-      $(this).trigger('s2e:movePoint');
+      var newPoint = this.pointPosition();
+      if (oldPoint != newPoint) {
+        $(this).trigger('s2e:movePoint');
+      }
     },
 
     movePointTo : function(position) {
+      if (this.pointPosition() == position) {
+        return;
+      }
       movePoint(this, position - this.presize);
       $(this).trigger('s2e:movePoint');
     },
