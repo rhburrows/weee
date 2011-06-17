@@ -12,7 +12,10 @@
       top: '-' + (2*areaheight) + 'px'
     });
     textarea.after(this.canvas);
+
     $(this.canvas).click(clickHandler(textarea, this));
+    $(this.canvas).mousedown(mouseDownHandler(textarea, this));
+    $(this.canvas).mouseup(mouseUpHandler(textarea, this));
 
     this.context = this.canvas.getContext('2d');
     this.padding = 20;
@@ -26,7 +29,27 @@
   function clickHandler(textarea, display) {
     return function(ev) {
       $(textarea).focus();
-      var e =jQuery.Event('s2e:click');
+      var e = $.Event('s2e:click');
+      e.pageX = ev.pageX;
+      e.pageY = ev.pageY;
+      e.position = clickToPosition(display, e.pageX, e.pageY);
+      $(display).trigger(e);
+    };
+  }
+
+  function mouseDownHandler(textareaa, display) {
+    return function(ev) {
+      var e = $.Event('s2e:mousedown');
+      e.pageX = ev.pageX;
+      e.pageY = ev.pageY;
+      e.position = clickToPosition(display, e.pageX, e.pageY);
+      $(display).trigger(e);
+    };
+  }
+
+  function mouseUpHandler(textarea, display) {
+    return function(ev) {
+      var e = $.Event('s2e:mouseup');
       e.pageX = ev.pageX;
       e.pageY = ev.pageY;
       e.position = clickToPosition(display, e.pageX, e.pageY);
