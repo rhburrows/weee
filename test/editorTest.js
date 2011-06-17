@@ -402,3 +402,16 @@ test("s2e:contentsUpdate event", function(){
   editor.backspace();
   editor.delChar();
 });
+
+test("s2e:movePoint event", function(){
+  editor.insertString("Welcome!");
+  editor.movePointTo(0);
+
+  $(editor).bind('s2e:movePoint', function(e){
+    equals(e.pointFrom, 0, "It has the original point position");
+    equals(e.pointTo, 5, "It has the new point position");
+  });
+
+  expect(2);
+  editor.movePointTo(5);
+});

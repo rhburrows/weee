@@ -74,11 +74,14 @@
   }
 
   function watchPoint(editor, f) {
-    var oldPoint = editor.pointPosition();
+    var pointFrom = editor.pointPosition();
     f();
-    var newPoint = editor.pointPosition();
-    if (oldPoint != newPoint) {
-      $(editor).trigger('s2e:movePoint');
+    var pointTo = editor.pointPosition();
+    if (pointFrom != pointTo) {
+      var e = $.Event('s2e:movePoint');
+      e.pointFrom = pointFrom;
+      e.pointTo = pointTo;
+      $(editor).trigger(e);
     }
   }
 
