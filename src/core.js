@@ -9,6 +9,12 @@
     keybindings  : {}    
   };
 
+  function extendEvent(e, editor, display) {
+    e.editor = editor;
+    e.display = display;
+    return e;
+  }
+
   $.fn.s2e = function(opts) {
     return this.map(function(){
       var textarea = $(this);
@@ -20,10 +26,6 @@
       var display = new $.fn.s2e.config.Display(width, height);
       var editor = new $.fn.s2e.config.Editor(options.initialText);
       var inputManager = new $.fn.s2e.config.InputManager();
-
-      $(display).bind('s2e:click', function(ev){
-        textarea.focus();
-      });
 
       textarea.css({
         position: 'absolute',
@@ -41,22 +43,20 @@
         textarea.val(editor.contents());
       });
 
-      $(editor).bind('s2e:movePoint s2e:contentsUpdate', function(ev) {
+      $(editor).bind('s2e:movePoint s2e:contentsUpdate', function(e) {
         display.paint(editor);
+        textarea.trigger(extendEvent(e, editor, display));
       });
       display.paint(editor);
 
       $(display).bind('s2e:click', function(ev) {
+        textarea.focus();
         editor.movePointTo(ev.position);
       });
 
       // bubble display events through textarea
       $(display).bind('s2e:click s2e:mousedown s2e:mouseup s2e:repaint', function(e){
-        textarea.trigger(e);
-      });
-      // bubble editor events through textarea
-      $(editor).bind('s2e:movePoint s2e:contentsUpdate', function(e){
-        textarea.trigger(e);
+        textarea.trigger(extendEvent(e, editor, display));
       });
 
       textarea.keydown(inputManager.handler(editor));

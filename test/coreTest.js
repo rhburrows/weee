@@ -25,48 +25,53 @@ test("click", function(){
 });
 
 test("s2e:click is sent to the textarea", function(){
-  textarea.bind('s2e:click', function(){
-    ok("s2e:click called!");
+  textarea.bind('s2e:click', function(e){
+    equals(e.editor, editor, "It provides access to the editor");
+    ok(e.display, "It provides access to the display");
   });
 
-  expect(1);
+  expect(2);
   $('canvas').click();
 });
 
 test("s2e:mousedown is sent to the textarea", function(){
-  textarea.bind('s2e:mousedown', function(){
-    ok("s2e:mousedown called!");
+  textarea.bind('s2e:mousedown', function(e){
+    equals(e.editor, editor, "It provides access to the editor");
+    ok(e.display, "It provides access to the display");
   });
 
-  expect(1);
+  expect(2);
   $('canvas').mousedown();
 });
 
 test("s2e:mouseup is sent to the textarea", function(){
-  textarea.bind('s2e:mouseup', function(){
-    ok("s2e:mouseup called!");
+  textarea.bind('s2e:mouseup', function(e){
+    equals(e.editor, editor, "It provides access to the editor");
+    ok(e.display, "It provides access to the display");
   });
 
-  expect(1);
+  expect(2);
   $('canvas').mouseup();
 });
 
 test("s2e:contentsUpdate is sent to the textarea", function(){
-  textarea.bind('s2e:contentsUpdate', function(){
-    ok("s2e:contentsUpdate called!");
+  textarea.bind('s2e:contentsUpdate', function(e){
+    equals(e.editor, editor, "It provides access to the editor");
+    ok(e.display, "It provides access to the display");
   });
 
-  expect(1);
+  expect(2);
   editor.insertString("Hello!");
 });
 
 test("s2e:movePoint is sent to the textarea", function(){
   editor.insertString("Hello!");
 
-  textarea.bind('s2e:movePoint', function(){
-    ok("s2e:contentsUpdate called!");
+  textarea.bind('s2e:movePoint', function(e){
+    equals(e.editor, editor, "It provides access to the editor");
+    ok(e.display, "It provides access to the display");
   });
 
-  expect(1);
+  expect(2);
   editor.movePoint(-2);
 });
