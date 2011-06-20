@@ -76,6 +76,31 @@ test("bindKey", function(){
   equals(callCountFive, 2, "Keybindings don't step on each other");
 });
 
+test("bindKeys", function() {
+  var ctrlCount = 0, shiftCount = 0;
+  var controlS = function(editor, ev) { ctrlCount++; };
+  var shiftS = function(editor, ev) { shiftCount++; };
+
+  inputManager.bindKeys({
+    'C-s' : controlS,
+    'S-s' : shiftS
+  });
+
+  var ctrlPress = jQuery.Event('keydown');
+  ctrlPress.which = 83;
+  ctrlPress.ctrlKey = true;
+
+  var shiftPress = jQuery.Event('keydown');
+  shiftPress.which = 83;
+  shiftPress.shiftKey = true;
+
+  inputHandler(ctrlPress);
+  inputHandler(shiftPress);
+
+  equals(ctrlCount, 1, "It binds the first binding");
+  equals(shiftCount, 1, "It binds the second binding");
+});
+
 function testKeyString(keyString, which, name) {
   test(keyString + " matches " + name, function() {
     var callCount = 0;

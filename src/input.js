@@ -58,6 +58,13 @@
       this.bindings[keyString + modifiers] = f;
     },
 
+    bindKeys : function(bindings) {
+      var self = this;
+      $.each(bindings, function(key, binding){
+        self.bindKey(key, binding);
+      });
+    },
+
     handler : function(editor) {
       var bindings = this.bindings;
       return function(e) {

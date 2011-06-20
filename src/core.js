@@ -35,9 +35,7 @@
       textarea.val(options.initialText);
       textarea.after(display.canvas);
 
-      $.each($.fn.s2e.config.keybindings, function(key, binding){
-        inputManager.bindKey(key, binding);
-      });
+      inputManager.bindKeys($.fn.s2e.config.keybindings);
 
       $(editor).bind('s2e:contentsUpdate', function(ev) {
         textarea.val(editor.contents());
