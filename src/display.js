@@ -111,11 +111,11 @@
 
         this.lineLengths[line]++;
 
-        if (c == '\n') {
-          if (i == editor.pointPosition()) {
-            paintCursor(this, col, row);
-          }
+        if (i == editor.pointPosition()) {
+          paintCursor(this, col, row);
+        }
 
+        if (c == '\n') {
           col = 0;
           row++;
           line++;
@@ -123,11 +123,6 @@
           currentLineCount = 0;
         } else {
           paintCharacter(this, c, col, row);
-
-          if (i == editor.pointPosition()) {
-            paintCursor(this, col, row);
-          }
-
           col++;
           currentLineCount++;
         
