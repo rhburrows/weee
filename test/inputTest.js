@@ -148,3 +148,24 @@ testKeyString('<F9>', 120, "F9");
 testKeyString('<F10>', 121, "F10");
 testKeyString('<F11>', 122, "F11");
 testKeyString('<F12>', 123, "F12");
+
+test("bindKey with keycodes", function(){
+  var callCount = 0;
+  inputManager.bindKey('\\180', function(editor, ev){
+    callCount++;
+  });
+  var keyPress = jQuery.Event('keydown');
+  keyPress.which = 180;
+  inputHandler(keyPress);
+  equals(callCount, 1, "It treats escaped keycodes as the actual code");
+
+  var modCallCount = 0;
+  inputManager.bindKey('C-\\180', function(editor, ev){
+    modCallCount++;
+  });
+  var modKeyPress = jQuery.Event('keydown');
+  modKeyPress.which = 180;
+  modKeyPress.ctrlKey = true;
+  inputHandler(modKeyPress);
+  equals(modCallCount, 1, "It handles escaped codes with modifiers too");
+});

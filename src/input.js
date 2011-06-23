@@ -24,14 +24,6 @@
     SPECIAL_KEY_STRINGS[111 + i] = '<F' + i + '>';
   }
 
-  function keyStringFromCode(charCode) {
-    if (typeof SPECIAL_KEY_STRINGS[charCode] !== 'undefined') {
-      return SPECIAL_KEY_STRINGS[charCode];
-    } else {
-      return String.fromCharCode(charCode);
-    }
-  }
-
   InputManager.prototype = {
     bindKey : function(command, f) {
       var keys = command.split('-');
@@ -51,7 +43,9 @@
 
       // There's probably a better way to do this
       var keyString = keys[0];
-      if (typeof SPECIAL_KEY_STRINGS[keyString] === "undefined") {
+      if (keyString.indexOf('\\') == 0) {
+        keyString = keyString.slice(1);
+      } else if (typeof SPECIAL_KEY_STRINGS[keyString] === "undefined") {
         keyString = keyString.toUpperCase();
       }
 
@@ -68,7 +62,13 @@
     handler : function(editor) {
       var bindings = this.bindings;
       return function(e) {
-        var keyString = keyStringFromCode(e.which);
+        var keyString;
+        if (typeof SPECIAL_KEY_STRINGS[e.which] !== 'undefined') {
+          keyString = SPECIAL_KEY_STRINGS[e.which];
+        } else {
+          keyString = String.fromCharCode(e.which);
+        }
+
         var modifiers = EMPTY;
         if (e.shiftKey) {
           modifiers = modifiers | KBD_SHIFT;
@@ -83,6 +83,9 @@
         if (typeof bindings[keyString + modifiers] !== "undefined") {
           e.preventDefault();
           return bindings[keyString + modifiers](editor, e);
+        } else if (typeof bindings["" + e.which + modifiers] !== "undefined") {
+          e.preventDefault();
+          return bindings["" + e.which + modifiers](editor, e);
         } else {
           e.preventDefault();
           return true;
