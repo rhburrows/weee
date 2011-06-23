@@ -28,12 +28,13 @@
       var inputManager = new $.fn.s2e.config.InputManager();
 
       textarea.css({
-        position: 'absolute',
-        left: '-' + (2*width) + 'px',
-        top: '-' + (2*height) + 'px'
+         position: 'absolute',
+         left: '-' + (2*width) + 'px',
+         top: '-' + (2*height) + 'px'
       });
       textarea.val(options.initialText);
       textarea.after(display.canvas);
+      textarea.after(inputManager.characterReader);
 
       inputManager.bindKeys($.fn.s2e.config.keybindings);
 
@@ -48,7 +49,7 @@
       display.paint(editor);
 
       $(display).bind('s2e:click', function(ev) {
-        textarea.focus();
+        $(inputManager.characterReader).focus();
         editor.movePointTo(ev.position);
       });
 
@@ -57,7 +58,12 @@
         textarea.trigger(extendEvent(e, editor, display));
       });
 
-      textarea.keydown(inputManager.handler(editor));
+      $(inputManager.characterReader).keydown(inputManager.handler(editor));
+      $(inputManager.characterReader).css({
+        position: 'absolute',
+        left: '-300px',
+        top:  '-300px'
+      });
 
       return editor;
     });

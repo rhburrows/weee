@@ -15,15 +15,6 @@ test("textarea-editor link", function(){
         "It keeps the backing textarea synced to the canvas");
 });
 
-test("click", function(){
-  equals($('#editor:focus').size(), 0,
-         "The textarea should not be focused to start");
-
-  $("canvas").click();
-  equals($('#editor:focus').size(), 1,
-         "The textarea should be focused after clicking on the canvas");
-});
-
 test("s2e:click is sent to the textarea", function(){
   textarea.bind('s2e:click', function(e){
     equals(e.editor, editor, "It provides access to the editor");

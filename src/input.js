@@ -1,5 +1,7 @@
 (function($){
   function InputManager() {
+    this.characterReader = document.createElement('input');
+    $(this.characterReader).attr('type', 'text');
     this.bindings = {};
   }
 
@@ -60,6 +62,7 @@
 
     handler : function(editor) {
       var bindings = this.bindings;
+      var characterReader = this.characterReader;
       return function(e) {
         var keyString;
         if (typeof SPECIAL_KEY_STRINGS[e.which] !== 'undefined') {
@@ -81,12 +84,23 @@
 
         if (typeof bindings[keyString + modifiers] !== "undefined") {
           e.preventDefault();
+          e.stopPropagation();
           return bindings[keyString + modifiers](editor, e);
         } else if (typeof bindings["\\" + e.which + modifiers] !== "undefined") {
           e.preventDefault();
+          e.stopPropagation();
           return bindings["\\" + e.which + modifiers](editor, e);
         } else {
-          e.preventDefault();
+          setTimeout(function(){
+            var s = $(characterReader).val();
+            if (s.length == 1) {
+              editor.insertChar(c);
+            } else if (s.length > 1) {
+              editor.insertString(s);
+            }
+            $(characterReader).val('');
+          }, 5);
+          e.stopPropagation();
           return true;
         }
       };
