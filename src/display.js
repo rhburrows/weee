@@ -71,8 +71,8 @@
     var pixelY = rowToY(display, row);
     var face = display.currentFace;
 
-    display.context.fillStyle = 'grey';
-    display.context.fillRect(pixelX, pixelY - (this.lineHeight / 2), 5, 5);
+    display.context.fillStyle = 'gray';
+    display.context.fillRect(pixelX, pixelY - (display.lineHeight / 2), 5, 5);
 
     applyFace(display, face);
   }
