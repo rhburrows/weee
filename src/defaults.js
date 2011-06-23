@@ -92,7 +92,7 @@
   // 0-9
   for (var n=48; n<58; n++) {
     var num = String.fromCharCode(n);
-    defaultKeys[n] = insertF(num);
+    defaultKeys['\\' + n] = insertF(num);
   }
 
   $.fn.s2e.config.keybindings = defaultKeys;

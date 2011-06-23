@@ -43,9 +43,8 @@
 
       // There's probably a better way to do this
       var keyString = keys[0];
-      if (keyString.indexOf('\\') == 0) {
-        keyString = keyString.slice(1);
-      } else if (typeof SPECIAL_KEY_STRINGS[keyString] === "undefined") {
+      if (typeof SPECIAL_KEY_STRINGS[keyString] === "undefined" &&
+                 keyString.indexOf('\\') != 0) {
         keyString = keyString.toUpperCase();
       }
 
@@ -83,9 +82,9 @@
         if (typeof bindings[keyString + modifiers] !== "undefined") {
           e.preventDefault();
           return bindings[keyString + modifiers](editor, e);
-        } else if (typeof bindings["" + e.which + modifiers] !== "undefined") {
+        } else if (typeof bindings["\\" + e.which + modifiers] !== "undefined") {
           e.preventDefault();
-          return bindings["" + e.which + modifiers](editor, e);
+          return bindings["\\" + e.which + modifiers](editor, e);
         } else {
           e.preventDefault();
           return true;
