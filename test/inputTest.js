@@ -169,3 +169,44 @@ test("bindKey with keycodes", function(){
   inputHandler(modKeyPress);
   equals(modCallCount, 1, "It handles escaped codes with modifiers too");
 });
+
+test("unbindKey", function(){
+  var callCount = 0;
+  inputManager.bindKey('C-s', function(editor, ev){
+    callCount++;
+  });
+  var keyPress = jQuery.Event('keydown');
+  keyPress.which = 83;
+  keyPress.ctrlKey = true;
+  inputHandler(keyPress);
+  equals(callCount, 1, "Make sure its bound before testing unbinding");
+
+  inputManager.unbindKey('C-s');
+  inputHandler(keyPress);
+  equals(callCount, 1, "It removes the binding");
+});
+
+test("unbindKeys", function(){
+  var callCountOne = 0,
+      callCountTwo = 0;
+  inputManager.bindKeys({
+    'C-s' : function(){ callCountOne++; },
+    'A-s' : function(){ callCountTwo++; }
+  });
+  var keyPressOne = jQuery.Event('keydown'),
+      keyPressTwo = jQuery.Event('keydown');
+  keyPressOne.which = 83;
+  keyPressTwo.which = 83;
+  keyPressOne.ctrlKey = true;
+  keyPressTwo.altKey  = true;
+  inputHandler(keyPressOne);
+  inputHandler(keyPressTwo);
+  equals(callCountOne, 1, "Make sure its bound before testing unbinding");
+  equals(callCountTwo, 1, "Make sure its bound before testing unbinding");
+
+  inputManager.unbindKeys(['C-s', 'A-s']);
+  inputHandler(keyPressOne);
+  inputHandler(keyPressTwo);
+  equals(callCountOne, 1, "It removes the binding");
+  equals(callCountTwo, 1, "It handles every binding in the list");
+});

@@ -26,31 +26,41 @@
     SPECIAL_KEY_STRINGS[111 + i] = '<F' + i + '>';
   }
 
+  function keyStringFromCommand(command) {
+    var keys = command.split('-');
+    var modifiers = EMPTY;
+    while (keys.length > 1) {
+      var mod = keys.shift();
+      if (mod == 'S') {
+        modifiers = modifiers | KBD_SHIFT;
+      }
+      if (mod == 'C') {
+        modifiers = modifiers | KBD_CONTROL;
+      }
+      if (mod == 'A') {
+        modifiers = modifiers | KBD_ALT;
+      }
+    }
+
+    // There's probably a better way to do this
+    var keyString = keys[0];
+    if (typeof SPECIAL_KEY_STRINGS[keyString] === "undefined" &&
+               keyString.indexOf('\\') != 0) {
+      keyString = keyString.toUpperCase();
+    }
+
+    return keyString + modifiers;
+  }
+
   InputManager.prototype = {
     bindKey : function(command, f) {
-      var keys = command.split('-');
-      var modifiers = EMPTY;
-      while (keys.length > 1) {
-        var mod = keys.shift();
-        if (mod == 'S') {
-          modifiers = modifiers | KBD_SHIFT;
-        }
-        if (mod == 'C') {
-          modifiers = modifiers | KBD_CONTROL;
-        }
-        if (mod == 'A') {
-          modifiers = modifiers | KBD_ALT;
-        }
-      }
+      var keyString = keyStringFromCommand(command);
+      this.bindings[keyString] = f;
+    },
 
-      // There's probably a better way to do this
-      var keyString = keys[0];
-      if (typeof SPECIAL_KEY_STRINGS[keyString] === "undefined" &&
-                 keyString.indexOf('\\') != 0) {
-        keyString = keyString.toUpperCase();
-      }
-
-      this.bindings[keyString + modifiers] = f;
+    unbindKey : function(command) {
+      var keyString = keyStringFromCommand(command);
+      delete this.bindings[keyString];
     },
 
     bindKeys : function(bindings) {
@@ -60,6 +70,13 @@
       });
     },
 
+    unbindKeys : function(commands) {
+      var self = this;
+      $.each(commands, function(_index, command) {
+        self.unbindKey(command);
+      });
+    },
+    
     handler : function(editor) {
       var bindings = this.bindings;
       var characterReader = this.characterReader;
