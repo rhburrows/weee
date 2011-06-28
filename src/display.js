@@ -161,6 +161,10 @@
 
     setFace : function(from, to, face) {
       this.faces.push([from, to, face]);
+    },
+
+    insertAfter : function(e) {
+      e.after(this.canvas);
     }
   };
 

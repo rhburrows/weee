@@ -25,7 +25,7 @@
 
       var display = new $.fn.s2e.config.Display(width, height);
       var editor = new $.fn.s2e.config.Editor(options.initialText);
-      var inputManager = new $.fn.s2e.config.InputManager();
+      var inputManager = new $.fn.s2e.config.InputManager(display);
 
       textarea.css({
          position: 'absolute',
@@ -33,9 +33,8 @@
          top: '-' + (2*height) + 'px'
       });
       textarea.val(options.initialText);
-      textarea.after(display.canvas);
-      textarea.after(inputManager.characterReader);
-
+      display.insertAfter(textarea);
+      inputManager.insertAfter(textarea);
       inputManager.bindKeys($.fn.s2e.config.keybindings);
 
       $(editor).bind('s2e:contentsUpdate', function(ev) {

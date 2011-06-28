@@ -134,6 +134,10 @@
 
     keydown : function(f) {
       $(this.characterReader).keydown(f);
+    },
+
+    insertAfter : function(e) {
+      e.after(this.characterReader);
     }
   };
 
