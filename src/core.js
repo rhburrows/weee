@@ -49,7 +49,7 @@
       display.paint(editor);
 
       $(display).bind('s2e:click', function(ev) {
-        $(inputManager.characterReader).focus();
+        inputManager.focus();
         editor.movePointTo(ev.position);
       });
 
@@ -58,12 +58,7 @@
         textarea.trigger(extendEvent(e, editor, display));
       });
 
-      $(inputManager.characterReader).keydown(inputManager.handler(editor));
-      $(inputManager.characterReader).css({
-        position: 'absolute',
-        left: '-300px',
-        top:  '-300px'
-      });
+      inputManager.keydown(inputManager.handler(editor));
 
       return editor;
     });

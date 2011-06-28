@@ -2,6 +2,11 @@
   function InputManager() {
     this.characterReader = document.createElement('input');
     $(this.characterReader).attr('type', 'text');
+    $(this.characterReader).css({
+      position : 'absolute',
+      left : '-300px',
+      top : '-300px'
+    });
     this.bindings = {};
   }
 
@@ -121,6 +126,14 @@
           return true;
         }
       };
+    },
+
+    focus : function() {
+      $(this.characterReader).focus();
+    },
+
+    keydown : function(f) {
+      $(this.characterReader).keydown(f);
     }
   };
 
