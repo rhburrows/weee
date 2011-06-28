@@ -111,7 +111,7 @@
           setTimeout(function(){
             var s = $(characterReader).val();
             if (s.length == 1) {
-              editor.insertChar(c);
+              editor.insertChar(s);
             } else if (s.length > 1) {
               editor.insertString(s);
             }
