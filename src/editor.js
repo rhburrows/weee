@@ -6,7 +6,6 @@
     this.presize = 0;
     this.postsize = 0;
 
-    initialText = initialText || "";
     this.insertString(initialText);
     movePoint(this, -initialText.length);
   }
