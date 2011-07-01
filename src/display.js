@@ -1,5 +1,12 @@
 (function($){
 
+  function defaultFace() {
+    return new Face({
+      family : 'Monaco',
+      size   : 14
+    });
+  }
+
   function Display(width, height) {
     this.canvas = document.createElement('canvas');
     $(this.canvas).attr('width', '' + width + 'px');
@@ -12,7 +19,7 @@
     this.context = this.canvas.getContext('2d');
     this.padding = 20;
     this.faces = [];
-    this.defaultFace = new Face({ family : 'Monaco', size : 14 });
+    this.defaultFace = defaultFace();
     applyFace(this, this.defaultFace);
     // Used for line wrapping. Messy? Yes
     this.lineLengths = [];
