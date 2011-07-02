@@ -21,7 +21,6 @@
     this.faces = [];
     this.defaultFace = defaultFace();
     applyFace(this, this.defaultFace);
-    // Used for line wrapping. Messy? Yes
     this.lineLengths = [];
   }
 
@@ -37,12 +36,17 @@
 
   function clickToPosition(display, x, y) {
     var line = yToLine(display, y);
-    var position = 0, i = 0;
+    var position = 0,
+        i = 0;
     while (i < line - 1) {
       position += display.lineLengths[i];
-      line = line - Math.ceil(display.lineLengths[i] / display.lineLength);
+      i++;
     }
     var col = xToCol(display, x);
+
+    if (col > display.lineLengths[line-1]) {
+      col = display.lineLengths[line-1];
+    }
     return position + (col - 1);
   }
 
@@ -69,17 +73,6 @@
 
     display.context.fillStyle = 'red';
     display.context.fillText('|', pixelX - (display.charWidth / 2), pixelY);
-
-    applyFace(display, face);
-  }
-
-  function paintLineWrappingMarker(display, col, row) {
-    var pixelX = columnToX(display, col);
-    var pixelY = rowToY(display, row);
-    var face = display.currentFace;
-
-    display.context.fillStyle = 'gray';
-    display.context.fillRect(pixelX, pixelY - (display.lineHeight / 2), 5, 5);
 
     applyFace(display, face);
   }
@@ -132,13 +125,6 @@
           paintCharacter(this, c, col, row);
           col++;
           currentLineCount++;
-        
-          if (currentLineCount == this.lineLength) {
-            paintLineWrappingMarker(this, col, row);
-            col = 0;
-            row++;
-            currentLineCount = 0;
-          }
         }
       }
 
