@@ -15,6 +15,9 @@
       var initialText = "This is a canvas based javascript text editor.\n" +
                         "It will hopefully provide and extensible base " +
                         "that the whole velvet editor can be built upon";
+      for (var i = 0; i < 50; i++) {
+        initialText = initialText + "\nAnd add a " + i + " line.";
+      }
       $('#editor').s2e({
         initialText : initialText
       });

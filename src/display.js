@@ -7,7 +7,7 @@
     });
   }
 
-  function Display(width, height) {
+  function Display(editor, width, height) {
     this.canvas = document.createElement('canvas');
     $(this.canvas).attr('width', '' + width + 'px');
     $(this.canvas).attr('height', '' + height + 'px');
@@ -24,6 +24,7 @@
     this.lineLengths = [];
 
     this.visibleRange = [0, Math.floor(height/this.lineHeight)];
+    this.editor = editor;
   }
 
   function mouseHandler(event, display) {
@@ -120,19 +121,25 @@
   }
 
   Display.prototype = {
-    paint : function(editor) {
+    repaint : function() {
       this.clear();
 
       var col = 0,
           row = 0,
           currentLine = 0;
-      var contents = editor.contents();
+      var contents = this.editor.contents();
       this.lineLengths[row] = 0;
-      var tooLong = false;
+      var tooLong = false,
+          cursorPainted = false;
       for (var i=0; i<contents.length; i++) {
         var c = contents.charAt(i);
 
         if (row < this.visibleRange[0]) {
+          if (i == this.editor.pointPosition()) {
+            console.log("Scrolling up: " + (this.visibleRange[0] - row));
+            this.scrollUp(this.visibleRange[0] - row);
+            return this.repaint();
+          }
           if (c == '\n') {
             row++;
             this.lineLengths[row] = 0;
@@ -144,7 +151,8 @@
 
           this.lineLengths[row]++;
 
-          if (i == editor.pointPosition()) {
+          if (i == this.editor.pointPosition()) {
+            cursorPainted = true;
             paintCursor(this, col, currentLine);
           }
 
@@ -159,13 +167,27 @@
           }
 
           if (row > this.visibleRange[1]) {
+            console.log("TOO LONG [row: " + row + ", range: " + this.visibleRange[1]);
+            console.log(cursorPainted);
             tooLong = true;
+            while (!cursorPainted && i < contents.length) {
+              i++;
+              c = contents.charAt(i);
+              if (c == '\n') {
+                row++;
+              }
+              if (i == this.editor.pointPosition()) {
+                console.log("Scrolling down: " + (row - this.visibleRange[1]));
+                this.scrollDown(row - this.visibleRange[1]);
+                return this.repaint();
+              }
+            }
             break;
           }
         }
       }
 
-      if (editor.pointPosition() == contents.length) {
+      if (this.editor.pointPosition() == contents.length) {
         paintCursor(this, col, row);
       }
 
@@ -173,7 +195,7 @@
         paintScrollbar(this,
                        this.visibleRange[0],
                        this.visibleRange[1],
-                       editor.lineCount());
+                       this.editor.lineCount());
       }
 
       $(this).trigger('s2e:repaint');
@@ -205,16 +227,16 @@
       e.after(this.canvas);
     },
 
-    scrollDown : function(n, editor) {
+    scrollDown : function(n) {
       this.visibleRange[0] = this.visibleRange[0] + n;
       this.visibleRange[1] = this.visibleRange[1] + n;
-      this.paint(editor);
+      this.repaint();
     },
 
-    scrollUp : function(n, editor) {
+    scrollUp : function(n) {
       this.visibleRange[0] = this.visibleRange[0] - n;
       this.visibleRange[1] = this.visibleRange[1] - n;
-      this.paint(editor);
+      this.repaint();
     }
   };
 

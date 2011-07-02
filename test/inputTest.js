@@ -1,6 +1,5 @@
 module("input", {
   setup: function() {
-    var nullEditor = {};
     inputManager = new $.fn.s2e.config.InputManager();
     inputHandler = inputManager.handler();
   }

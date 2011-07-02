@@ -23,9 +23,9 @@
       var width = textarea.width();
       var height = textarea.height();
 
-      var display = new $.fn.s2e.config.Display(width, height);
       var editor = new $.fn.s2e.config.Editor(options.initialText);
-      var inputManager = new $.fn.s2e.config.InputManager(display);
+      var display = new $.fn.s2e.config.Display(editor, width, height);
+      var inputManager = new $.fn.s2e.config.InputManager();
 
       textarea.css({
          position: 'absolute',
@@ -42,10 +42,10 @@
       });
 
       $(editor).bind('s2e:movePoint s2e:contentsUpdate', function(e) {
-        display.paint(editor);
+        display.repaint();
         textarea.trigger(extendEvent(e, editor, display));
       });
-      display.paint(editor);
+      display.repaint();
 
       $(display).bind('s2e:click', function(ev) {
         inputManager.focus();
@@ -59,8 +59,6 @@
 
       inputManager.keydown(inputManager.handler(editor));
 
-      window.scrollDown = function(){ display.scrollDown(1, editor); };
-      window.scrollUp   = function(){ display.scrollUp(1, editor); };
       return editor;
     });
   };
