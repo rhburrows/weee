@@ -1,0 +1,19 @@
+This is a list of things todo to finish s2e for release
+=======================================================
+
+* Horizontal Scrolling
+* Vertical Scrolling
+* Line Wrapping
+* Mouse selection
+* Copy & Paste
+* Cursor Styling
+* Background Styling
+* syntax highlighting mode <-- contrib
+* html syntax highlighting <-- contrib
+* javascript syntax highlighting <-- contrib
+* Flush out the README
+* Document the public API
+* Write documentation generating tasks
+* Rename the project
+  Find an appropriate name
+* Publicify the github project
