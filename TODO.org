@@ -1,13 +1,14 @@
 This is a list of things todo to finish s2e for release
 =======================================================
 
-* Horizontal Scrolling
 * Vertical Scrolling
+* Horizontal Scrolling
 * Line Wrapping
 * Mouse selection
 * Copy & Paste
 * Cursor Styling
 * Background Styling
+* Scrollbar Styling
 * syntax highlighting mode <-- contrib
 * html syntax highlighting <-- contrib
 * javascript syntax highlighting <-- contrib

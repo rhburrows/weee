@@ -59,6 +59,8 @@
 
       inputManager.keydown(inputManager.handler(editor));
 
+      window.scrollDown = function(){ display.scrollDown(1, editor); };
+      window.scrollUp   = function(){ display.scrollUp(1, editor); };
       return editor;
     });
   };

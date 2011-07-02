@@ -228,6 +228,13 @@
       return start.join('') + end.join('');
     },
 
+    lineCount : function() {
+      if (this.contents().length == 0) {
+        return 0;
+      }
+      return this.contents().split('\n').length;
+    },
+
     pointPosition : function() {
       return this.presize;
     },

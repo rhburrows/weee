@@ -22,6 +22,8 @@
     this.defaultFace = defaultFace();
     applyFace(this, this.defaultFace);
     this.lineLengths = [];
+
+    this.visibleRange = [0, Math.floor(height/this.lineHeight)];
   }
 
   function mouseHandler(event, display) {
@@ -77,6 +79,29 @@
     applyFace(display, face);
   }
 
+  function paintScrollbar(display, from, to, max) {
+    var face = display.currentFace;
+
+    display.context.fillStyle = 'gray';
+    var left = $(display.canvas).position().left + $(display.canvas).width() - 20;
+    var top = $(display.canvas).position().top;
+    var height = $(display.canvas).height();
+    var width = 15;
+    display.context.fillRect(left, top, width, height);
+
+    display.context.fillStyle = '#ddd';
+    width = 8;
+    left = left + 2;
+
+    var percentage = (to - from) / max;
+    var maxHeight = height - 20;
+    height = Math.round(maxHeight * percentage);
+    top = top + 10 + Math.round(maxHeight * (from / max));
+    display.context.fillRect(left, top, width, height);
+    
+    applyFace(display, face);
+  }
+
   function applyFace(display, face) {
     display.context.fillStyle = face.color;
     display.charWidth = face.size * 0.8;
@@ -98,39 +123,59 @@
     paint : function(editor) {
       this.clear();
 
-      var col = 0, row = 0, line = 0;
-      var currentLineCount = 0;
+      var col = 0,
+          row = 0,
+          currentLine = 0;
       var contents = editor.contents();
-      this.lineLengths[line] = 0;
+      this.lineLengths[row] = 0;
+      var tooLong = false;
       for (var i=0; i<contents.length; i++) {
         var c = contents.charAt(i);
 
-        if (this.faceForPosition(i) != this.currentFace) {
-          applyFace(this, this.faceForPosition(i));
-        }
+        if (row < this.visibleRange[0]) {
+          if (c == '\n') {
+            row++;
+            this.lineLengths[row] = 0;
+          }
+        } else{
+          if (this.faceForPosition(i) != this.currentFace) {
+            applyFace(this, this.faceForPosition(i));
+          }
 
-        this.lineLengths[line]++;
+          this.lineLengths[row]++;
 
-        if (i == editor.pointPosition()) {
-          paintCursor(this, col, row);
-        }
+          if (i == editor.pointPosition()) {
+            paintCursor(this, col, currentLine);
+          }
 
-        if (c == '\n') {
-          col = 0;
-          row++;
-          line++;
-          this.lineLengths[line] = 0;
-          currentLineCount = 0;
-        } else {
-          paintCharacter(this, c, col, row);
-          col++;
-          currentLineCount++;
+          if (c == '\n') {
+            col = 0;
+            row++;
+            currentLine++;
+            this.lineLengths[row] = 0;
+          } else {
+            paintCharacter(this, c, col, currentLine);
+            col++;
+          }
+
+          if (row > this.visibleRange[1]) {
+            tooLong = true;
+            break;
+          }
         }
       }
 
       if (editor.pointPosition() == contents.length) {
         paintCursor(this, col, row);
       }
+
+      if (tooLong || this.visibleRange[0] > 0) {
+        paintScrollbar(this,
+                       this.visibleRange[0],
+                       this.visibleRange[1],
+                       editor.lineCount());
+      }
+
       $(this).trigger('s2e:repaint');
     },
 
@@ -158,6 +203,18 @@
 
     insertAfter : function(e) {
       e.after(this.canvas);
+    },
+
+    scrollDown : function(n, editor) {
+      this.visibleRange[0] = this.visibleRange[0] + n;
+      this.visibleRange[1] = this.visibleRange[1] + n;
+      this.paint(editor);
+    },
+
+    scrollUp : function(n, editor) {
+      this.visibleRange[0] = this.visibleRange[0] - n;
+      this.visibleRange[1] = this.visibleRange[1] - n;
+      this.paint(editor);
     }
   };
 

@@ -428,3 +428,14 @@ test("s2e:movePoint event", function(){
   expect(2);
   editor.movePointTo(5);
 });
+
+test("lineCount", function(){
+  equals(editor.lineCount(), 0, "It works on empty editors");
+
+  editor.insertString("H");
+  equals(editor.lineCount(), 1, "It works if there's just one line");
+
+  editor.insertString("ello\nThere\nFriend.");
+
+  equals(editor.lineCount(), 3, "It counts the number of lines with multiple");
+});
