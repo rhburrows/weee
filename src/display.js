@@ -23,7 +23,7 @@
     applyFace(this, this.defaultFace);
     this.lineLengths = [];
 
-    this.visibleRange = [0, Math.floor(height/this.lineHeight)];
+    this.visibleFrame = new VisibleFrame(this, 0, height/this.lineHeight);
     this.editor = editor;
   }
 
@@ -134,10 +134,9 @@
       for (var i=0; i<contents.length; i++) {
         var c = contents.charAt(i);
 
-        if (row < this.visibleRange[0]) {
+        if (!this.visibleFrame.visible(row)) {
           if (i == this.editor.pointPosition()) {
-            console.log("Scrolling up: " + (this.visibleRange[0] - row));
-            this.scrollUp(this.visibleRange[0] - row);
+            this.visibleFrame.scrollTo(row);
             return this.repaint();
           }
           if (c == '\n') {
@@ -166,9 +165,7 @@
             col++;
           }
 
-          if (row > this.visibleRange[1]) {
-            console.log("TOO LONG [row: " + row + ", range: " + this.visibleRange[1]);
-            console.log(cursorPainted);
+          if (!this.visibleFrame.visible(row)) {
             tooLong = true;
             while (!cursorPainted && i < contents.length) {
               i++;
@@ -177,8 +174,7 @@
                 row++;
               }
               if (i == this.editor.pointPosition()) {
-                console.log("Scrolling down: " + (row - this.visibleRange[1]));
-                this.scrollDown(row - this.visibleRange[1]);
+                this.visibleFrame.scrollTo(row);
                 return this.repaint();
               }
             }
@@ -191,14 +187,15 @@
         paintCursor(this, col, row);
       }
 
-      if (tooLong || this.visibleRange[0] > 0) {
+      if (tooLong || this.visibleFrame.first > 0) {
         paintScrollbar(this,
-                       this.visibleRange[0],
-                       this.visibleRange[1],
+                       this.visibleFrame.first,
+                       this.visibleFrame.last,
                        this.editor.lineCount());
       }
 
       $(this).trigger('s2e:repaint');
+      return true;
     },
 
     clear : function() {
@@ -228,14 +225,12 @@
     },
 
     scrollDown : function(n) {
-      this.visibleRange[0] = this.visibleRange[0] + n;
-      this.visibleRange[1] = this.visibleRange[1] + n;
+      this.visibleFrame.scrollUp(n);
       this.repaint();
     },
 
     scrollUp : function(n) {
-      this.visibleRange[0] = this.visibleRange[0] - n;
-      this.visibleRange[1] = this.visibleRange[1] - n;
+      this.visibleFrame.scrollUp(n);
       this.repaint();
     }
   };
@@ -258,6 +253,36 @@
         this.size + '/' +
         this.lineHeight + ' ' +
         this.family + ' ';
+    }
+  };
+
+  function VisibleFrame(display, from, to) {
+    this.maxLines = Math.floor($(display.canvas).height() / display.lineHeight);
+    this.first = from || 0;
+    this.last = to || (this.maxLines);
+  }
+
+  VisibleFrame.prototype = {
+    scrollDown : function(n) {
+      this.first = this.first + n;
+      this.last = this.last + n;
+    },
+
+    scrollUp : function(n) {
+      this.first = this.first - n;
+      this.last = this.last - n;
+    },
+
+    scrollTo : function(row) {
+      if (row > this.last) {
+        this.scrollDown(row - this.last);
+      } else if (row < this.first) {
+        this.scrollUp(this.first - row);
+      }
+    },
+
+    visible : function(row) {
+      return (row >= this.first && row <= this.last);
     }
   };
 
