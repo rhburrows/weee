@@ -128,58 +128,62 @@
           row = 0,
           currentLine = 0;
       var contents = this.editor.contents();
-      this.lineLengths[row] = 0;
       var tooLong = false,
           cursorPainted = false;
+
+      this.lineLengths[row] = 0;
       for (var i=0; i<contents.length; i++) {
         var c = contents.charAt(i);
 
-        if (!this.visibleFrame.visible(row)) {
-          if (i == this.editor.pointPosition()) {
+        while (!this.visibleFrame.visible(row)) {
+          if (c == '\n') {
+            row++;
+            this.lineLengths[row] = 0;
+          }
+
+          if (this.editor.pointPosition() == i) {
             this.visibleFrame.scrollTo(row);
-            return this.repaint();
+            return this.repaint();            
           }
-          if (c == '\n') {
-            row++;
-            this.lineLengths[row] = 0;
-          }
-        } else{
-          if (this.faceForPosition(i) != this.currentFace) {
-            applyFace(this, this.faceForPosition(i));
-          }
+          i++;
+          c = contents.charAt(i);
+        }
 
-          this.lineLengths[row]++;
+        if (this.faceForPosition(i) != this.currentFace) {
+          applyFace(this, this.faceForPosition(i));
+        }
 
-          if (i == this.editor.pointPosition()) {
-            cursorPainted = true;
-            paintCursor(this, col, currentLine);
-          }
+        this.lineLengths[row]++;
 
-          if (c == '\n') {
-            col = 0;
-            row++;
-            currentLine++;
-            this.lineLengths[row] = 0;
-          } else {
-            paintCharacter(this, c, col, currentLine);
-            col++;
-          }
+        if (i == this.editor.pointPosition()) {
+          cursorPainted = true;
+          paintCursor(this, col, currentLine);
+        }
 
-          if (!this.visibleFrame.visible(row)) {
-            tooLong = true;
-            while (!cursorPainted && i < contents.length) {
-              i++;
-              c = contents.charAt(i);
-              if (c == '\n') {
-                row++;
-              }
-              if (i == this.editor.pointPosition()) {
-                this.visibleFrame.scrollTo(row);
-                return this.repaint();
-              }
+        if (c == '\n') {
+          col = 0;
+          row++;
+          currentLine++;
+          this.lineLengths[row] = 0;
+        } else {
+          paintCharacter(this, c, col, currentLine);
+          col++;
+        }
+
+        if (!this.visibleFrame.visible(row)) {
+          tooLong = true;
+          while (!cursorPainted && i < contents.length) {
+            i++;
+            c = contents.charAt(i);
+            if (c == '\n') {
+              row++;
             }
-            break;
+            if (i == this.editor.pointPosition()) {
+              this.visibleFrame.scrollTo(row);
+              return this.repaint();
+            }
           }
+          break;
         }
       }
 
