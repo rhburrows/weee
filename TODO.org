@@ -1,10 +1,10 @@
 This is a list of things todo to finish s2e for release
 =======================================================
 
-* Vertical Scrolling
-* Horizontal Scrolling
-* Line Wrapping
-* Mouse selection
+* Selection
+* Line Wrapping (again)
+* Mouse Selection
+* Mouse Scrolling
 * Copy & Paste
 * Cursor Styling
 * Background Styling
