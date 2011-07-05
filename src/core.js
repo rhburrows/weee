@@ -3,9 +3,6 @@
   var config = {
     initialText  : "",
     keybindings  : {},
-    Display      : null,
-    InputManager : null,
-    Editor       : null,
     keybindings  : {}    
   };
 
@@ -23,9 +20,9 @@
       var width = textarea.width();
       var height = textarea.height();
 
-      var editor = new $.fn.s2e.config.Editor(options.initialText);
-      var display = new $.fn.s2e.config.Display(editor, width, height);
-      var inputManager = new $.fn.s2e.config.InputManager();
+      var editor = new $.fn.s2e.Editor(options.initialText);
+      var display = new $.fn.s2e.Display(editor, width, height);
+      var inputManager = new $.fn.s2e.InputManager();
 
       textarea.css({
          position: 'absolute',

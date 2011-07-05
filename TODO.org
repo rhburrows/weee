@@ -1,17 +1,17 @@
 This is a list of things todo to finish s2e for release
 =======================================================
 
-* Selection
+* Selection <-- extras
 * Line Wrapping (again)
-* Mouse Selection
-* Mouse Scrolling
-* Copy & Paste
+* Mouse Selection <-- (in selection)
+* Mouse Scrolling <-- extras?
+* Copy & Paste <-- extras
 * Cursor Styling
 * Background Styling
 * Scrollbar Styling
-* syntax highlighting mode <-- contrib
-* html syntax highlighting <-- contrib
-* javascript syntax highlighting <-- contrib
+* syntax highlighting mode <-- extras
+* html syntax highlighting <-- extras
+* javascript syntax highlighting <-- extras
 * Flush out the README
 * Document the public API
 * Write documentation generating tasks

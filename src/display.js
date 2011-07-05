@@ -290,5 +290,5 @@
     }
   };
 
-  $.fn.s2e.config.Display = Display;
+  $.fn.s2e.Display = Display;
 })(jQuery);

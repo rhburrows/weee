@@ -141,5 +141,5 @@
     }
   };
 
-  $.fn.s2e.config.InputManager = InputManager;
+  $.fn.s2e.InputManager = InputManager;
 })(jQuery);

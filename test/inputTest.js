@@ -1,6 +1,6 @@
 module("input", {
   setup: function() {
-    inputManager = new $.fn.s2e.config.InputManager();
+    inputManager = new $.fn.s2e.InputManager();
     inputHandler = inputManager.handler();
   }
 });

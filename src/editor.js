@@ -1,5 +1,7 @@
 (function($){
 
+  var extraInitializers = [];
+
   function Editor(initialText) {
     this.buffer = new Array(50);
     this.size = 50;
@@ -8,7 +10,16 @@
 
     this.insertString(initialText);
     movePoint(this, -initialText.length);
+
+    var edit = this;
+    $.each(extraInitializers, function(_, i){
+      i.call(edit);
+    });
   }
+
+  Editor.addInit = function(init) {
+    extraInitializers.push(init);
+  };
 
   function pointForward(e) {
     if (e.postsize > 0) {
@@ -256,5 +267,5 @@
     }
   };
 
-  $.fn.s2e.config.Editor = Editor;
+  $.fn.s2e.Editor = Editor;
 })(jQuery);

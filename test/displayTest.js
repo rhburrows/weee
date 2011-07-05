@@ -1,6 +1,6 @@
 module("display", {
   setup: function() {
-    display = new $.fn.s2e.config.Display(100, 100);
+    display = new $.fn.s2e.Display(100, 100);
 
     // Stupid setup. Need to clean this up
     // Make sure no lines wrap

@@ -1,6 +1,6 @@
 module("editor", {
   setup: function() {
-    editor = new $.fn.s2e.config.Editor("");
+    editor = new $.fn.s2e.Editor("");
   }
 });
 
