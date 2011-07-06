@@ -7,7 +7,7 @@
     });
   }
 
-  function Display(editor, width, height) {
+  function Display(width, height) {
     this.canvas = document.createElement('canvas');
     $(this.canvas).attr('width', '' + width + 'px');
     $(this.canvas).attr('height', '' + height + 'px');
@@ -24,7 +24,6 @@
     this.lineLengths = [];
 
     this.visibleFrame = new VisibleFrame(this, 0, height/this.lineHeight);
-    this.editor = editor;
   }
 
   function mouseHandler(event, display) {
@@ -121,13 +120,13 @@
   }
 
   Display.prototype = {
-    repaint : function() {
+    repaint : function(editor) {
       this.clear();
 
       var col = 0,
           row = 0,
           currentLine = 0;
-      var contents = this.editor.contents();
+      var contents = editor.contents();
       var tooLong = false,
           cursorPainted = false;
 
@@ -141,7 +140,7 @@
             this.lineLengths[row] = 0;
           }
 
-          if (this.editor.pointPosition() == i) {
+          if (editor.pointPosition() == i) {
             this.visibleFrame.scrollTo(row);
             return this.repaint();            
           }
@@ -155,7 +154,7 @@
 
         this.lineLengths[row]++;
 
-        if (i == this.editor.pointPosition()) {
+        if (i == editor.pointPosition()) {
           cursorPainted = true;
           paintCursor(this, col, currentLine);
         }
@@ -178,16 +177,16 @@
             if (c == '\n') {
               row++;
             }
-            if (i == this.editor.pointPosition()) {
+            if (i == editor.pointPosition()) {
               this.visibleFrame.scrollTo(row);
-              return this.repaint();
+              return this.repaint(editor);
             }
           }
           break;
         }
       }
 
-      if (this.editor.pointPosition() == contents.length) {
+      if (editor.pointPosition() == contents.length) {
         paintCursor(this, col, row);
       }
 
@@ -195,7 +194,7 @@
         paintScrollbar(this,
                        this.visibleFrame.first,
                        this.visibleFrame.last,
-                       this.editor.lineCount());
+                       editor.lineCount());
       }
 
       $(this).trigger('s2e:repaint');
@@ -228,14 +227,14 @@
       e.after(this.canvas);
     },
 
-    scrollDown : function(n) {
+    scrollDown : function(editor, n) {
       this.visibleFrame.scrollUp(n);
-      this.repaint();
+      this.repaint(editor);
     },
 
-    scrollUp : function(n) {
+    scrollUp : function(editor, n) {
       this.visibleFrame.scrollUp(n);
-      this.repaint();
+      this.repaint(editor);
     }
   };
 
@@ -243,7 +242,7 @@
     this.style      = options['style']       || 'normal';
     this.variant    = options['variant']     || 'normal';
     this.weight     = options['weight']      || 'normal';
-    this.size       = options['size']        || 'medium';
+    this.size       = options['size']        || '14';
     this.lineHeight = options['line-height'] || 'normal';
     this.family     = options['family']      || 'monospace';
     this.color      = options['color']       || 'black';
@@ -256,7 +255,7 @@
         this.weight + ' ' +
         this.size + '/' +
         this.lineHeight + ' ' +
-        this.family + ' ';
+        this.family;
     }
   };
 

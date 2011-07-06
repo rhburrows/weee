@@ -2,11 +2,12 @@
 
   var extraInitializers = [];
 
-  function Editor(initialText) {
+  function Editor(initialText, display) {
     this.buffer = new Array(50);
     this.size = 50;
     this.presize = 0;
     this.postsize = 0;
+    this.display = display;
 
     this.insertString(initialText);
     movePoint(this, -initialText.length);
@@ -264,6 +265,10 @@
       } else {
         return "";
       }
+    },
+
+    setFace : function(from, to, face) {
+      this.display.setFace(from, to, face);
     }
   };
 

@@ -20,8 +20,8 @@
       var width = textarea.width();
       var height = textarea.height();
 
-      var editor = new $.fn.s2e.Editor(options.initialText);
-      var display = new $.fn.s2e.Display(editor, width, height);
+      var display = new $.fn.s2e.Display(width, height);
+      var editor = new $.fn.s2e.Editor(options.initialText, display);
       var inputManager = new $.fn.s2e.InputManager();
 
       textarea.css({
@@ -39,10 +39,10 @@
       });
 
       $(editor).bind('s2e:movePoint s2e:contentsUpdate', function(e) {
-        display.repaint();
+        display.repaint(editor);
         textarea.trigger(extendEvent(e, editor, display));
       });
-      display.repaint();
+      display.repaint(editor);
 
       $(display).bind('s2e:click', function(ev) {
         inputManager.focus();

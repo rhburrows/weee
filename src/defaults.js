@@ -50,6 +50,10 @@
 
     'C-p' : function(editor) {
       editor.previousLine();
+    },
+
+    'C-x' : function(editor) {
+      editor.toggleSelection();
     }
   };
 
