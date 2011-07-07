@@ -73,11 +73,10 @@
       return null;
     }
 
-    var contents = this.contents();
     if (this.selectionBegan < this.pointPosition()) {
-      return contents.slice(this.selectionBegan, this.pointPosition());
+      return editor.slice(this.selectionBegan, this.pointPosition());
     } else {
-      return contents.slice(this.pointPosition(), this.selectionBegan);
+      return editor.slice(this.pointPosition(), this.selectionBegan);
     }
   };
 

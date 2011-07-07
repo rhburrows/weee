@@ -439,3 +439,20 @@ test("lineCount", function(){
 
   equals(editor.lineCount(), 3, "It counts the number of lines with multiple");
 });
+
+test("slice", function(){
+  editor.insertString("Hello there");
+
+  equals(editor.slice(1,4), "ell",
+         "It works if the point is after the slice");
+
+  editor.movePointTo(0);
+
+  equals(editor.slice(1,4), "ell",
+         "It works if the point is before the slice");
+
+  editor.movePointTo(2);
+
+  equals(editor.slice(1,4), "ell",
+         "It works if the point is in the middle of the slice");
+});

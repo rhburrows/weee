@@ -269,6 +269,28 @@
 
     setFace : function(from, to, face) {
       this.display.setFace(from, to, face);
+    },
+
+    slice : function(from, to) {
+      var start = "",
+          end = "";
+
+      if (from < this.presize) {
+        if (to < this.presize) {
+          start = this.buffer.slice(from, to).join('');
+        } else {
+          start = this.buffer.slice(from, this.presize).join('');
+          var postStart = this.size - this.postsize;
+          end = this.buffer.slice(postStart,
+                                  postStart + (to - this.presize)).join('');
+        }
+      } else {
+        var postStart = this.size - this.postsize;
+        end = this.buffer.slice(postStart + (from - this.presize),
+                                postStart + (to - this.presize)).join('');
+      }
+
+      return start + end;
     }
   };
 
