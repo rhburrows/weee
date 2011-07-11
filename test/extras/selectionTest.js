@@ -36,8 +36,12 @@ test("selectionStart", function(){
          "It still works if the point moves before the starting point");
 
   editor.toggleSelection();
+  equals(editor.selectionStart(), 0,
+         "Its not cleared when the selection is toggled again");
+
+  editor.pointForward();
   equals(editor.selectionStart(), null,
-         "Its cleared when the selection is toggled again");
+         "Its cleared when the cursor is moved");
 });
 
 test("selectionEnd", function(){
@@ -60,8 +64,12 @@ test("selectionEnd", function(){
          "Its the later of the two points on the selection");
 
   editor.toggleSelection();
+  equals(editor.selectionEnd(), 2,
+         "Its stays the same when the selection is toggled");
+
+  editor.pointForward();
   equals(editor.selectionEnd(), null,
-         "Its cleared when the selection is toggled again");
+         "Its cleared when the cursor is moved");
 });
 
 test("selectedText", function(){
@@ -81,6 +89,23 @@ test("selectedText", function(){
   equals(editor.selectedText(), "Te", "It returns the contained string");
 
   editor.toggleSelection();
+  equals(editor.selectedText(), "Te", "It stays the same when toggled");
+
+  editor.pointForward();
   equals(editor.selectedText(), null,
-         "Its cleared when the selection is toggled again");
+         "Its cleared when the cursor is moved");
+});
+
+test("clearSelection", function(){
+  editor.insertString("Testing selection");
+  editor.movePointTo(2);
+  editor.toggleSelection();
+  editor.movePoint(5);
+
+  equals(editor.selectedText(), "sting", "Make sure the selection still works");
+
+  editor.clearSelection();
+  equals(editor.selectedText(), null, "It makes the selection null");
+  equals(editor.selectionStart(), null, "It clears the start point");
+  equals(editor.selectionEnd(), null, "It clears the end");
 });

@@ -37,15 +37,15 @@
       this.display.faces = [];
       $(this).unbind('s2e:movePoint s2e:contentsUpdate', setSelectionFace);
     } else {
-      this.selectionBegan = this.pointPosition();
       this.selectionActive = true;
 
+      this.selectionBegan = this.pointPosition();
       $(this).bind('s2e:movePoint s2e:contentsUpdate', setSelectionFace);
     }
   };
 
   $.fn.s2e.Editor.prototype.selectionStart = function() {
-    if (!this.selectionActive) {
+    if (this.selectionBegan == null) {
       return null;
     }
 
@@ -57,7 +57,7 @@
   };
 
   $.fn.s2e.Editor.prototype.selectionEnd = function() {
-    if (!this.selectionActive) {
+    if (this.selectionBegan == null) {
       return null;
     }
 
@@ -69,7 +69,7 @@
   };
 
   $.fn.s2e.Editor.prototype.selectedText = function() {
-    if (!this.selectionActive) {
+    if (this.selectionBegan == null) {
       return null;
     }
 
@@ -80,6 +80,10 @@
     }
   };
 
+  $.fn.s2e.Editor.prototype.clearSelection = function() {
+    this.selectionBegan = null;
+  };
+
   function isSelected(editor, position) {
     return position > editor.selectionStart() &&
       position < editor.selectionEnd();
@@ -87,6 +91,13 @@
 
   $.fn.s2e.Editor.addInit(function(){
     this.selectionActive = false;
+
+    var e = this;
+    $(this).bind('s2e:movePoint s2e:contentsUpdate', function(){
+      if (!e.selectionActive) {
+        e.selectionBegan = null;
+      }
+    });
   });
 
 })(jQuery);
