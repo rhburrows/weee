@@ -13,6 +13,12 @@
     movePoint(this, -initialText.length);
 
     var edit = this;
+
+    var displayEvents = $.fn.s2e.Display.Events.join(' ');
+    $(display).bind(displayEvents, function(ev){
+      $(edit).trigger(ev);
+    });
+
     $.each(extraInitializers, function(_, i){
       i.call(edit);
     });

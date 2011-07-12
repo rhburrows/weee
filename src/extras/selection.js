@@ -99,21 +99,20 @@
       }
     });
 
-    var d = this.display;
-    $(d).bind('s2e:mousedown', function(ev){
+    $(e).bind('s2e:mousedown', function(ev){
       if (!e.selectionActive) {
         e.movePointTo(ev.position);
         e.toggleSelection();
       }
     });
 
-    $(d).bind('s2e:mousemove', function(ev){
+    $(e).bind('s2e:mousemove', function(ev){
       if (e.selectionActive) {
         e.movePointTo(ev.position);
       }
     });
 
-    $(d).bind('s2e:mouseup', function(ev){
+    $(e).bind('s2e:mouseup', function(ev){
       if (e.selectionActive) {
         e.toggleSelection();
       }

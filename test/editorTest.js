@@ -1,10 +1,12 @@
 module("editor", {
   setup: function() {
-    editor = new $.fn.s2e.Editor("");
+    display = {};
+    editor = new $.fn.s2e.Editor("", display);
   }
 });
 
 var editor;
+var display;
 
 function countEvent(event) {
   $(editor).bind(event, function(){
@@ -455,4 +457,13 @@ test("slice", function(){
 
   equals(editor.slice(1,4), "ell",
          "It works if the point is in the middle of the slice");
+});
+
+test("display events", function(){
+  $(editor).bind('s2e:click', function(e){
+    ok("Display events are bubbled through the editor");
+  });
+
+  expect(1);
+  $(display).trigger('s2e:click');
 });

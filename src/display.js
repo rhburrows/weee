@@ -290,5 +290,12 @@
     }
   };
 
+  Display.Events = [
+    's2e:mousedown',
+    's2e:mousemove',
+    's2e:mouseup',
+    's2e:click'
+  ];
+
   $.fn.s2e.Display = Display;
 })(jQuery);
