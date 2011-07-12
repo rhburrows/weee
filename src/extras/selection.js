@@ -24,7 +24,7 @@
   function setSelectionFace(editor) {
     editor.display.faces = [];
     editor.display.setFace(editor.selectionStart(),
-                           editor.selectionEnd(),
+                           editor.selectionEnd()-1,
                            selectedFace);
   }
 
