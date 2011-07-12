@@ -21,9 +21,7 @@
     }
   };
 
-  function setSelectionFace(e) {
-    var editor = e.editor;
-    // TODO: HACK AGAIN!!!!
+  function setSelectionFace(editor) {
     editor.display.faces = [];
     editor.display.setFace(editor.selectionStart(),
                            editor.selectionEnd(),
@@ -33,14 +31,11 @@
   $.fn.s2e.Editor.prototype.toggleSelection = function() {
     if (this.selectionActive) {
       this.selectionActive = false;
-
-      this.display.faces = [];
-      $(this).unbind('s2e:movePoint s2e:contentsUpdate', setSelectionFace);
     } else {
       this.selectionActive = true;
 
       this.selectionBegan = this.pointPosition();
-      $(this).bind('s2e:movePoint s2e:contentsUpdate', setSelectionFace);
+
     }
   };
 
@@ -93,9 +88,29 @@
     this.selectionActive = false;
 
     var e = this;
-    $(this).bind('s2e:movePoint s2e:contentsUpdate', function(){
+    $(e).bind('s2e:movePoint s2e:contentsUpdate', function(){
       if (!e.selectionActive) {
+        if (e.display) {
+          e.display.faces = [];
+        }
         e.selectionBegan = null;
+      } else {
+        setSelectionFace(e);
+      }
+    });
+
+    var d = this.display;
+    $(d).bind('s2e:mousedown', function(ev){
+      if (!e.selectionActive) {
+        e.movePointTo(ev.position);
+        e.toggleSelection();
+      }
+    });
+
+    $(d).bind('s2e:mouseup', function(ev){
+      if (e.selectionActive) {
+        e.movePointTo(ev.position);
+        e.toggleSelection();
       }
     });
   });
