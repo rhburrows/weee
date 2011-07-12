@@ -107,9 +107,14 @@
       }
     });
 
-    $(d).bind('s2e:mouseup', function(ev){
+    $(d).bind('s2e:mousemove', function(ev){
       if (e.selectionActive) {
         e.movePointTo(ev.position);
+      }
+    });
+
+    $(d).bind('s2e:mouseup', function(ev){
+      if (e.selectionActive) {
         e.toggleSelection();
       }
     });
