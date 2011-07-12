@@ -1,9 +1,7 @@
 This is a list of things todo to finish s2e for release
 =======================================================
 
-* Selection <-- extras
 * Line Wrapping (again)
-* Mouse Selection <-- (in selection)
 * Mouse Scrolling <-- extras?
 * Copy & Paste <-- extras
 * Cursor Styling
