@@ -69,9 +69,9 @@
     }
 
     if (this.selectionBegan < this.pointPosition()) {
-      return editor.slice(this.selectionBegan, this.pointPosition());
+      return this.slice(this.selectionBegan, this.pointPosition());
     } else {
-      return editor.slice(this.pointPosition(), this.selectionBegan);
+      return this.slice(this.pointPosition(), this.selectionBegan);
     }
   };
 
