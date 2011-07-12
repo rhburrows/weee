@@ -63,3 +63,21 @@ test('s2e:mouseup event', function(){
 
   $(display.canvas).trigger(mouseup);
 });
+
+test('s2e:mouseup event', function(){
+  var mousemove = $.Event('mousemove');
+  mousemove.pageX = $(display.canvas).position().left + display.padding + 10;
+  mousemove.pageY = $(display.canvas).position().top + 10;
+
+  expect(3);
+  $(display).bind('s2e:mousemove', function(ev){
+    equals(ev.position, 0,
+           "It converts the coordinates to a position in the buffer");
+    equals(ev.pageX, $(display.canvas).position().left + display.padding + 10,
+          "It provides access to the actual click position");
+    equals(ev.pageY, $(display.canvas).position().top + 10,
+          "It provides access to the actual click position");
+  });
+
+  $(display.canvas).trigger(mousemove);
+});

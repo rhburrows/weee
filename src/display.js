@@ -15,6 +15,7 @@
     $(this.canvas).click(mouseHandler('s2e:click', this));
     $(this.canvas).mousedown(mouseHandler('s2e:mousedown', this));
     $(this.canvas).mouseup(mouseHandler('s2e:mouseup', this));
+    $(this.canvas).mousemove(mouseHandler('s2e:mousemove', this));
 
     this.context = this.canvas.getContext('2d');
     this.padding = 20;
