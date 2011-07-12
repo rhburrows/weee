@@ -1,6 +1,7 @@
 This is a list of things todo to finish s2e for release
 =======================================================
 
+* Fix face stuff
 * Line Wrapping (again)
 * Mouse Scrolling <-- extras?
 * Copy & Paste <-- extras
