@@ -21,11 +21,16 @@
     }
   };
 
+  var lastSelectStart, lastSelectEnd;
+
   function setSelectionFace(editor) {
-    editor.display.faces = [];
-    editor.display.setFace(editor.selectionStart(),
-                           editor.selectionEnd()-1,
-                           selectedFace);
+    if (lastSelectStart && lastSelectEnd) {
+      editor.display.clearFace(lastSelectStart, lastSelectEnd);
+    }
+
+    lastSelectStart = editor.selectionStart();
+    lastSelectEnd = editor.selectionEnd() - 1;
+    editor.display.setFace(lastSelectStart, lastSelectEnd, selectedFace);
   }
 
   $.fn.s2e.Editor.prototype.toggleSelection = function() {
@@ -76,6 +81,9 @@
   };
 
   $.fn.s2e.Editor.prototype.clearSelection = function() {
+    if (this.display) {
+      this.display.clearFace(this.selectionStart(), this.selectionEnd()-1);
+    }
     this.selectionBegan = null;
   };
 
@@ -90,10 +98,7 @@
     var e = this;
     $(e).bind('s2e:movePoint s2e:contentsUpdate', function(){
       if (!e.selectionActive) {
-        if (e.display) {
-          e.display.faces = [];
-        }
-        e.selectionBegan = null;
+        e.clearSelection();
       } else {
         setSelectionFace(e);
       }

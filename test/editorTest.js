@@ -1,6 +1,6 @@
 module("editor", {
   setup: function() {
-    display = {};
+    display = { clearFace : function(){} };
     editor = new $.fn.s2e.Editor("", display);
   }
 });

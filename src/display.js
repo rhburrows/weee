@@ -211,17 +211,62 @@
     },
 
     faceForPosition : function(position) {
-      for (var i=0; i<this.faces.length; i++) {
-        var faceApplication = this.faces[i];
-        if (faceApplication[0] <= position && position <= faceApplication[1]) {
-          return faceApplication[2];
+      for (var i = 0; i < this.faces.length; i++) {
+        var face = this.faces[i];
+        if (face[0] <= position && position <= face[1]) {
+          return face[2];
         }
       }
       return this.defaultFace;
     },
 
     setFace : function(from, to, face) {
-      this.faces.push([from, to, face]);
+      var updatedFaces = [];
+      for (var i = 0; i < this.faces.length; i++) {
+        var currentFace = this.faces[i];
+        if (from <= currentFace[0]) {
+          updatedFaces[updatedFaces.length] = [from, to, face];
+
+          if (to < currentFace[1]) {
+            updatedFaces[updatedFaces.length] = [to + 1, currentFace[1], currentFace[2]];
+          }
+        } else if (from < currentFace[1]) {
+          updatedFaces[updatedFaces.length] = [currentFace[0], from - 1, currentFace[2]];
+          updatedFaces[updatedFaces.length] = [from, to, face];
+
+          if (to < currentFace[1]) {
+            updatedFaces[updatedFaces.length] = [to + 1, currentFace[1], currentFace[2]];
+          }
+        } else {
+          updatedFaces[updatedFaces.length] = currentFace;
+        }
+      }
+
+      if (updatedFaces.length == 0) {
+        updatedFaces[0] = [from, to, face];
+      }
+      this.faces = updatedFaces;
+    },
+
+    clearFace : function(from, to) {
+      var updatedFaces = [];
+      for (var i = 0; i < this.faces.length; i++) {
+        var face = this.faces[i];
+        if (from < face[0]) {
+          if (to < face[1]) {
+            updatedFaces[updatedFaces.length] = [to, face[1], face[2]];
+          } else if (to < face[0]) {
+            updatedFaces[updatedFaces.length] = face;
+          }
+        } else if (from < face[1]) {
+          updatedFaces[updatedFaces.length] = [face[0], from - 1, face[2]];
+
+          if (to < face[1]) {
+            updatedFaces[updatedFaces.length] = [to + 1, face[1], face[2]];
+          }            
+        }
+      }
+      this.faces = updatedFaces;
     },
 
     insertAfter : function(e) {
@@ -248,6 +293,8 @@
     this.family     = options['family']      || 'monospace';
     this.color      = options['color']       || 'black';
   }
+
+  Display.Face = Face;
 
   Face.prototype = {
     fontString : function() {
