@@ -1,12 +1,5 @@
 (function($){
 
-  function defaultFace() {
-    return new Face({
-      family : 'Monaco',
-      size   : 14
-    });
-  }
-
   function Display(width, height) {
     this.canvas = document.createElement('canvas');
     $(this.canvas).attr('width', '' + width + 'px');
@@ -20,7 +13,7 @@
     this.context = this.canvas.getContext('2d');
     this.padding = 20;
     this.faces = [];
-    this.defaultFace = defaultFace();
+    this.defaultFace = DEFAULT_FACE;
     applyFace(this, this.defaultFace);
     this.lineLengths = [];
 
@@ -220,7 +213,12 @@
       return this.defaultFace;
     },
 
-    setFace : function(from, to, face) {
+    setFace : function(from, to, faceOpts) {
+      var face = new Face();
+      $.each(faceOpts, function(opt, val){
+        face[opt] = val;
+      });
+
       var updatedFaces = [];
       for (var i = 0; i < this.faces.length; i++) {
         var currentFace = this.faces[i];
@@ -284,19 +282,14 @@
     }
   };
 
-  function Face(options) {
-    this.style      = options['style']       || 'normal';
-    this.variant    = options['variant']     || 'normal';
-    this.weight     = options['weight']      || 'normal';
-    this.size       = options['size']        || '14';
-    this.lineHeight = options['line-height'] || 'normal';
-    this.family     = options['family']      || 'monospace';
-    this.color      = options['color']       || 'black';
-  }
-
-  Display.Face = Face;
-
-  Face.prototype = {
+  var DEFAULT_FACE = {
+    style : 'normal',
+    variant : 'normal',
+    weight : 'normal',
+    size : '14',
+    lineHeight : 'normal',
+    family : 'monospace',
+    color : 'black',
     fontString : function() {
       return this.style + ' ' +
         this.variant + ' ' +
@@ -307,6 +300,9 @@
     }
   };
 
+  function Face() {}
+  Face.prototype = DEFAULT_FACE;
+   
   function VisibleFrame(display, from, to) {
     this.maxLines = Math.floor($(display.canvas).height() / display.lineHeight);
     this.first = from || 0;

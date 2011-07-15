@@ -1,24 +1,7 @@
 (function($){
 
-  // TODO: HACK HACK HACK!
-  // Make this more configurable or something
-  // And make it use an actual face
   var selectedFace = {
-    style : 'normal',
-    variant : 'normal',
-    weight : 'bold',
-    size : '14',
-    lineHeight : 'normal',
-    family : 'monospace',
-    color : 'red',
-    fontString : function() {
-      return this.style + ' ' +
-        this.variant + ' ' +
-        this.weight + ' ' +
-        this.size + '/' +
-        this.lineHeight + ' ' +
-        this.family;
-    }
+    color : 'red'
   };
 
   var lastSelectStart, lastSelectEnd;

@@ -83,55 +83,59 @@ test('s2e:mouseup event', function(){
 });
 
 test('faces', function(){
-  var face = new $.fn.s2e.Display.Face({});
-  var defaultFace = new $.fn.s2e.Display.Face({});
-  display.defaultFace = defaultFace;
+  var face = {
+    color : 'yellow'
+  };
+  var defaultFace = display.defaultFace;
 
   display.setFace(5, 10, face);
 
-  equals(display.faceForPosition(0), defaultFace,
+  equals(display.faceForPosition(0).color, defaultFace.color,
          "It returns the default if the face hasn't been set");
-  equals(display.faceForPosition(4), defaultFace,
+  equals(display.faceForPosition(4).color, defaultFace.color,
          "Outside the boundaries don't count as the set face");
-  equals(display.faceForPosition(5), face,
+  equals(display.faceForPosition(5).color, face.color,
          "It counts as the face at the first boundary");
-  equals(display.faceForPosition(7), face,
+  equals(display.faceForPosition(7).color, face.color,
          "It counts as the face in the middle");
-  equals(display.faceForPosition(10), face,
+  equals(display.faceForPosition(10).color, face.color,
          "It counts as the face at the second boundary");
 
-  var newFace = new $.fn.s2e.Display.Face({});
+  var newFace = {
+    color : 'green'
+  };
   display.setFace(6, 8, newFace);
-  equals(display.faceForPosition(5), face,
+  equals(display.faceForPosition(5).color, face.color,
          "It doesn't override the old set face outside the boundaries");
-  equals(display.faceForPosition(6), newFace,
+  equals(display.faceForPosition(6).color, newFace.color,
          "It counts as the face at the first boundary");
-  equals(display.faceForPosition(7), newFace,
+  equals(display.faceForPosition(7).color, newFace.color,
          "It counts as the face in the middle");
-  equals(display.faceForPosition(8), newFace,
+  equals(display.faceForPosition(8).color, newFace.color,
          "It counts as the face at the second boundary");
-  equals(display.faceForPosition(15), defaultFace,
+  equals(display.faceForPosition(15).color, defaultFace.color,
          "It's still the default after the set faces");
 });
 
 test('clearFace', function(){
-  var face = new $.fn.s2e.Display.Face({});
-  var defaultFace = new $.fn.s2e.Display.Face({});
-  display.defaultFace = defaultFace;
+  var face = {
+    color : 'blue'
+  };
+  var defaultFace = display.defaultFace;
 
   display.setFace(5, 10, face);
 
-  equals(display.faceForPosition(7), face,
+  equals(display.faceForPosition(7).color, face.color,
          "It set the face properly");
 
   display.clearFace(7, 9);
 
-  equals(display.faceForPosition(6), face,
+  equals(display.faceForPosition(6).color, face.color,
          "It doesn't clear before the starting point");
-  equals(display.faceForPosition(7), defaultFace,
+  equals(display.faceForPosition(7).color, defaultFace.color,
          "It sets from the starting point back to deafult");
-  equals(display.faceForPosition(9), defaultFace,
+  equals(display.faceForPosition(9).color, defaultFace.color,
          "It sets at the ending point back to deafult");
-  equals(display.faceForPosition(10), face,
+  equals(display.faceForPosition(10).color, face.color,
          "It doesn't clear after the ending point");
 });
