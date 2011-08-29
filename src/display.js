@@ -5,10 +5,10 @@
     $(this.canvas).attr('width', '' + width + 'px');
     $(this.canvas).attr('height', '' + height + 'px');
 
-    $(this.canvas).click(mouseHandler('s2e:click', this));
-    $(this.canvas).mousedown(mouseHandler('s2e:mousedown', this));
-    $(this.canvas).mouseup(mouseHandler('s2e:mouseup', this));
-    $(this.canvas).mousemove(mouseHandler('s2e:mousemove', this));
+    $(this.canvas).click(mouseHandler('weee:click', this));
+    $(this.canvas).mousedown(mouseHandler('weee:mousedown', this));
+    $(this.canvas).mouseup(mouseHandler('weee:mouseup', this));
+    $(this.canvas).mousemove(mouseHandler('weee:mousemove', this));
 
     this.context = this.canvas.getContext('2d');
     this.padding = 20;
@@ -191,7 +191,7 @@
                        editor.lineCount());
       }
 
-      $(this).trigger('s2e:repaint');
+      $(this).trigger('weee:repaint');
       return true;
     },
 
@@ -334,11 +334,11 @@
   };
 
   Display.Events = [
-    's2e:mousedown',
-    's2e:mousemove',
-    's2e:mouseup',
-    's2e:click'
+    'weee:mousedown',
+    'weee:mousemove',
+    'weee:mouseup',
+    'weee:click'
   ];
 
-  $.fn.s2e.Display = Display;
+  $.fn.weee.Display = Display;
 })(jQuery);

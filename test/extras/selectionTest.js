@@ -1,6 +1,6 @@
 module("extras/selection", {
   setup: function() {
-    editor = $('#editor').s2e().get(0);
+    editor = $('#editor').weee().get(0);
   }
 });
 

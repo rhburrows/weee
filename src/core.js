@@ -12,7 +12,7 @@
     return e;
   }
 
-  $.fn.s2e = function(opts) {
+  $.fn.weee = function(opts) {
     return this.map(function(){
       var textarea = $(this);
       var options = $.extend({ initialText: "" }, opts);
@@ -20,9 +20,9 @@
       var width = textarea.width();
       var height = textarea.height();
 
-      var display = new $.fn.s2e.Display(width, height);
-      var editor = new $.fn.s2e.Editor(options.initialText, display);
-      var inputManager = new $.fn.s2e.InputManager();
+      var display = new $.fn.weee.Display(width, height);
+      var editor = new $.fn.weee.Editor(options.initialText, display);
+      var inputManager = new $.fn.weee.InputManager();
 
       textarea.css({
          position: 'absolute',
@@ -32,25 +32,25 @@
       textarea.val(options.initialText);
       display.insertAfter(textarea);
       inputManager.insertAfter(textarea);
-      inputManager.bindKeys($.fn.s2e.config.keybindings);
+      inputManager.bindKeys($.fn.weee.config.keybindings);
 
-      $(editor).bind('s2e:contentsUpdate', function(ev) {
+      $(editor).bind('weee:contentsUpdate', function(ev) {
         textarea.val(editor.contents());
       });
 
-      $(editor).bind('s2e:movePoint s2e:contentsUpdate', function(e) {
+      $(editor).bind('weee:movePoint weee:contentsUpdate', function(e) {
         display.repaint(editor);
         textarea.trigger(extendEvent(e, editor, display));
       });
       display.repaint(editor);
 
-      $(display).bind('s2e:click', function(ev) {
+      $(display).bind('weee:click', function(ev) {
         inputManager.focus();
         editor.movePointTo(ev.position);
       });
 
       // bubble display events through textarea
-      $(display).bind('s2e:click s2e:mousedown s2e:mouseup s2e:repaint', function(e){
+      $(display).bind('weee:click weee:mousedown weee:mouseup weee:repaint', function(e){
         textarea.trigger(extendEvent(e, editor, display));
       });
 
@@ -60,6 +60,6 @@
     });
   };
 
-  $.fn.s2e.config = config;
+  $.fn.weee.config = config;
 
 })(jQuery);

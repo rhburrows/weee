@@ -57,5 +57,5 @@
     }
   };
 
-  $.fn.s2e.config.keybindings = defaultKeys;
+  $.fn.weee.config.keybindings = defaultKeys;
 })(jQuery);

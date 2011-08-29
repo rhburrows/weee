@@ -141,5 +141,5 @@
     }
   };
 
-  $.fn.s2e.InputManager = InputManager;
+  $.fn.weee.InputManager = InputManager;
 })(jQuery);

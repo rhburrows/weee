@@ -1,7 +1,7 @@
 module("editor", {
   setup: function() {
     display = { clearFace : function(){} };
-    editor = new $.fn.s2e.Editor("", display);
+    editor = new $.fn.weee.Editor("", display);
   }
 });
 
@@ -27,7 +27,7 @@ test("insertChar", function(){
 });
 
 test("insertChar events", function(){
-  countEvent('s2e:contentsUpdate');
+  countEvent('weee:contentsUpdate');
 
   expect(2);
   editor.insertChar('a');
@@ -49,7 +49,7 @@ test("insertString", function(){
 });
 
 test("insertString events", function(){
-  countEvent('s2e:contentsUpdate');
+  countEvent('weee:contentsUpdate');
 
   expect(2);
   editor.insertString("line 1\n");
@@ -70,7 +70,7 @@ test("backspace", function(){
 
 test("backspace events", function(){
   editor.insertString('Hi');
-  countEvent('s2e:contentsUpdate');
+  countEvent('weee:contentsUpdate');
 
   expect(2);
   editor.backspace();
@@ -102,7 +102,7 @@ test("delChar events", function(){
   editor.insertString("Hi");
   editor.movePointTo(0);
 
-  countEvent('s2e:contentsUpdate');
+  countEvent('weee:contentsUpdate');
 
   expect(2);
   editor.delChar();
@@ -130,7 +130,7 @@ test("pointForward events", function(){
   editor.movePoint(-2);
 
   expect(2);
-  countEvent('s2e:movePoint');
+  countEvent('weee:movePoint');
 
   editor.pointForward();
   editor.pointForward();
@@ -155,7 +155,7 @@ test("pointBackward", function(){
 test("pointBackward events", function(){
   editor.insertString("Hi");
 
-  countEvent('s2e:movePoint');
+  countEvent('weee:movePoint');
 
   expect(2);
   editor.pointBackward();
@@ -188,7 +188,7 @@ test("endOfLine events", function(){
   editor.insertString("text\ntext");
   editor.movePointTo(0);
 
-  countEvent('s2e:movePoint');
+  countEvent('weee:movePoint');
 
   expect(1);
   editor.endOfLine();
@@ -220,7 +220,7 @@ test("beginningOfLine", function(){
 test("beginningOfLine", function(){
   editor.insertString("text\ntext");
 
-  countEvent('s2e:movePoint');
+  countEvent('weee:movePoint');
 
   expect(1);
   editor.beginningOfLine();
@@ -258,7 +258,7 @@ test("nextLine", function(){
   editor.insertString("text\ntext\ntext");
   editor.movePointTo(0);
 
-  countEvent('s2e:movePoint');
+  countEvent('weee:movePoint');
 
   expect(2);
   editor.nextLine();
@@ -294,7 +294,7 @@ test("previousLine", function(){
 test("previousLine", function(){
   editor.insertString("text\ntext\ntext");
 
-  countEvent('s2e:movePoint');
+  countEvent('weee:movePoint');
 
   expect(2);
   editor.previousLine();
@@ -323,7 +323,7 @@ test("movePoint", function(){
 test("movePoint events", function(){
   editor.insertString("Test");
 
-  countEvent('s2e:movePoint');
+  countEvent('weee:movePoint');
 
   expect(2);
   editor.movePoint(-2);
@@ -352,7 +352,7 @@ test("movePointTo", function(){
 test("movePointTo events", function(){
   editor.insertString("Sample");
 
-  countEvent('s2e:movePoint');
+  countEvent('weee:movePoint');
 
   expect(2);
   editor.movePointTo(2);
@@ -382,7 +382,7 @@ test("gotoLine", function() {
 test("gotoLine", function(){
   editor.insertString("text\ntext");
 
-  countEvent('s2e:movePoint');
+  countEvent('weee:movePoint');
 
   expect(2);
   editor.gotoLine(1);
@@ -418,11 +418,11 @@ test("previousChar", function(){
          "It returns an empty string if at the beginning of the buffer");
 });
 
-test("s2e:movePoint event", function(){
+test("weee:movePoint event", function(){
   editor.insertString("Welcome!");
   editor.movePointTo(0);
 
-  $(editor).bind('s2e:movePoint', function(e){
+  $(editor).bind('weee:movePoint', function(e){
     equals(e.pointFrom, 0, "It has the original point position");
     equals(e.pointTo, 5, "It has the new point position");
   });
@@ -460,10 +460,10 @@ test("slice", function(){
 });
 
 test("display events", function(){
-  $(editor).bind('s2e:click', function(e){
+  $(editor).bind('weee:click', function(e){
     ok("Display events are bubbled through the editor");
   });
 
   expect(1);
-  $(display).trigger('s2e:click');
+  $(display).trigger('weee:click');
 });

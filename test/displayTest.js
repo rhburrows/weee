@@ -1,6 +1,6 @@
 module("display", {
   setup: function() {
-    display = new $.fn.s2e.Display(100, 100);
+    display = new $.fn.weee.Display(100, 100);
 
     // stupid setup. Need to clean this up
     // Make sure no lines wrap
@@ -10,13 +10,13 @@ module("display", {
 
 var display;
 
-test('s2e:click event', function(){
+test('weee:click event', function(){
   var click = $.Event('click');
   click.pageX = $(display.canvas).position().left + display.padding + 10;
   click.pageY = $(display.canvas).position().top + 10;
 
   expect(3);
-  $(display).bind('s2e:click', function(ev){
+  $(display).bind('weee:click', function(ev){
     equals(ev.position, 0,
            "It converts the coordinates to a position in the buffer");
     equals(ev.pageX, $(display.canvas).position().left + display.padding + 10,
@@ -28,13 +28,13 @@ test('s2e:click event', function(){
   $(display.canvas).trigger(click);
 });
 
-test('s2e:mousedown event', function(){
+test('weee:mousedown event', function(){
   var mousedown = $.Event('mousedown');
   mousedown.pageX = $(display.canvas).position().left + display.padding + 10;
   mousedown.pageY = $(display.canvas).position().top + 10;
 
   expect(3);
-  $(display).bind('s2e:mousedown', function(ev){
+  $(display).bind('weee:mousedown', function(ev){
     equals(ev.position, 0,
            "It converts the coordinates to a position in the buffer");
     equals(ev.pageX, $(display.canvas).position().left + display.padding + 10,
@@ -46,13 +46,13 @@ test('s2e:mousedown event', function(){
   $(display.canvas).trigger(mousedown);
 });
 
-test('s2e:mouseup event', function(){
+test('weee:mouseup event', function(){
   var mouseup = $.Event('mouseup');
   mouseup.pageX = $(display.canvas).position().left + display.padding + 10;
   mouseup.pageY = $(display.canvas).position().top + 10;
 
   expect(3);
-  $(display).bind('s2e:mouseup', function(ev){
+  $(display).bind('weee:mouseup', function(ev){
     equals(ev.position, 0,
            "It converts the coordinates to a position in the buffer");
     equals(ev.pageX, $(display.canvas).position().left + display.padding + 10,
@@ -64,13 +64,13 @@ test('s2e:mouseup event', function(){
   $(display.canvas).trigger(mouseup);
 });
 
-test('s2e:mouseup event', function(){
+test('weee:mouseup event', function(){
   var mousemove = $.Event('mousemove');
   mousemove.pageX = $(display.canvas).position().left + display.padding + 10;
   mousemove.pageY = $(display.canvas).position().top + 10;
 
   expect(3);
-  $(display).bind('s2e:mousemove', function(ev){
+  $(display).bind('weee:mousemove', function(ev){
     equals(ev.position, 0,
            "It converts the coordinates to a position in the buffer");
     equals(ev.pageX, $(display.canvas).position().left + display.padding + 10,

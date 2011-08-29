@@ -8,19 +8,19 @@ MODULES = ${SRC_DIR}/core.js \
 	${SRC_DIR}/defaults.js \
 
 VERSION = $(shell cat version.txt)
-S2E = ${PKG_DIR}/jquery.s2e.${VERSION}.js
+WEEE = ${PKG_DIR}/jquery.weee.${VERSION}.js
 
-s2e: ${S2E}
+weee: ${WEEE}
 
 ${PKG_DIR}:
 	mkdir -p ${PKG_DIR}
 
-${S2E}: ${PKG_DIR}
-	echo '(function($$){' > ${S2E};
+${WEEE}: ${PKG_DIR}
+	echo '(function($$){' > ${WEEE};
 	cat ${MODULES} | \
 		sed 's/(function($$) *{//' | \
-		sed 's/})(jQuery);//' >> ${S2E};
-	echo '})(jQuery);' >> ${S2E};
+		sed 's/})(jQuery);//' >> ${WEEE};
+	echo '})(jQuery);' >> ${WEEE};
 
 clean:
 	rm -rf ${PKG_DIR}

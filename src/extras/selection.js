@@ -16,7 +16,7 @@
     editor.display.setFace(lastSelectStart, lastSelectEnd, selectedFace);
   }
 
-  $.fn.s2e.Editor.prototype.toggleSelection = function() {
+  $.fn.weee.Editor.prototype.toggleSelection = function() {
     if (this.selectionActive) {
       this.selectionActive = false;
     } else {
@@ -27,7 +27,7 @@
     }
   };
 
-  $.fn.s2e.Editor.prototype.selectionStart = function() {
+  $.fn.weee.Editor.prototype.selectionStart = function() {
     if (this.selectionBegan == null) {
       return null;
     }
@@ -39,7 +39,7 @@
     }
   };
 
-  $.fn.s2e.Editor.prototype.selectionEnd = function() {
+  $.fn.weee.Editor.prototype.selectionEnd = function() {
     if (this.selectionBegan == null) {
       return null;
     }
@@ -51,7 +51,7 @@
     }
   };
 
-  $.fn.s2e.Editor.prototype.selectedText = function() {
+  $.fn.weee.Editor.prototype.selectedText = function() {
     if (this.selectionBegan == null) {
       return null;
     }
@@ -63,7 +63,7 @@
     }
   };
 
-  $.fn.s2e.Editor.prototype.clearSelection = function() {
+  $.fn.weee.Editor.prototype.clearSelection = function() {
     if (this.display) {
       this.display.clearFace(this.selectionStart(), this.selectionEnd()-1);
     }
@@ -75,11 +75,11 @@
       position < editor.selectionEnd();
   }
 
-  $.fn.s2e.Editor.addInit(function(){
+  $.fn.weee.Editor.addInit(function(){
     this.selectionActive = false;
 
     var e = this;
-    $(e).bind('s2e:movePoint s2e:contentsUpdate', function(){
+    $(e).bind('weee:movePoint weee:contentsUpdate', function(){
       if (!e.selectionActive) {
         e.clearSelection();
       } else {
@@ -87,20 +87,20 @@
       }
     });
 
-    $(e).bind('s2e:mousedown', function(ev){
+    $(e).bind('weee:mousedown', function(ev){
       if (!e.selectionActive) {
         e.movePointTo(ev.position);
         e.toggleSelection();
       }
     });
 
-    $(e).bind('s2e:mousemove', function(ev){
+    $(e).bind('weee:mousemove', function(ev){
       if (e.selectionActive) {
         e.movePointTo(ev.position);
       }
     });
 
-    $(e).bind('s2e:mouseup', function(ev){
+    $(e).bind('weee:mouseup', function(ev){
       if (e.selectionActive) {
         e.toggleSelection();
       }

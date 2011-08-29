@@ -1,6 +1,6 @@
 module("core", {
   setup: function() {
-    editor = $('#editor').s2e().get(0);
+    editor = $('#editor').weee().get(0);
     textarea = $('#editor');
   }
 });
@@ -15,8 +15,8 @@ test("textarea-editor link", function(){
         "It keeps the backing textarea synced to the canvas");
 });
 
-test("s2e:click is sent to the textarea", function(){
-  textarea.bind('s2e:click', function(e){
+test("weee:click is sent to the textarea", function(){
+  textarea.bind('weee:click', function(e){
     equals(e.editor, editor, "It provides access to the editor");
     ok(e.display, "It provides access to the display");
   });
@@ -25,8 +25,8 @@ test("s2e:click is sent to the textarea", function(){
   $('canvas').click();
 });
 
-test("s2e:mousedown is sent to the textarea", function(){
-  textarea.bind('s2e:mousedown', function(e){
+test("weee:mousedown is sent to the textarea", function(){
+  textarea.bind('weee:mousedown', function(e){
     equals(e.editor, editor, "It provides access to the editor");
     ok(e.display, "It provides access to the display");
   });
@@ -35,8 +35,8 @@ test("s2e:mousedown is sent to the textarea", function(){
   $('canvas').mousedown();
 });
 
-test("s2e:mouseup is sent to the textarea", function(){
-  textarea.bind('s2e:mouseup', function(e){
+test("weee:mouseup is sent to the textarea", function(){
+  textarea.bind('weee:mouseup', function(e){
     equals(e.editor, editor, "It provides access to the editor");
     ok(e.display, "It provides access to the display");
   });
@@ -45,8 +45,8 @@ test("s2e:mouseup is sent to the textarea", function(){
   $('canvas').mouseup();
 });
 
-test("s2e:contentsUpdate is sent to the textarea", function(){
-  textarea.bind('s2e:contentsUpdate', function(e){
+test("weee:contentsUpdate is sent to the textarea", function(){
+  textarea.bind('weee:contentsUpdate', function(e){
     equals(e.editor, editor, "It provides access to the editor");
     ok(e.display, "It provides access to the display");
   });
@@ -55,10 +55,10 @@ test("s2e:contentsUpdate is sent to the textarea", function(){
   editor.insertString("Hello!");
 });
 
-test("s2e:movePoint is sent to the textarea", function(){
+test("weee:movePoint is sent to the textarea", function(){
   editor.insertString("Hello!");
 
-  textarea.bind('s2e:movePoint', function(e){
+  textarea.bind('weee:movePoint', function(e){
     equals(e.editor, editor, "It provides access to the editor");
     ok(e.display, "It provides access to the display");
   });

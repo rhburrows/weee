@@ -14,7 +14,7 @@
 
     var edit = this;
 
-    var displayEvents = $.fn.s2e.Display.Events.join(' ');
+    var displayEvents = $.fn.weee.Display.Events.join(' ');
     $(display).bind(displayEvents, function(ev){
       $(edit).trigger(ev);
     });
@@ -95,7 +95,7 @@
     f();
     var pointTo = editor.pointPosition();
     if (pointFrom != pointTo) {
-      var e = $.Event('s2e:movePoint');
+      var e = $.Event('weee:movePoint');
       e.pointFrom = pointFrom;
       e.pointTo = pointTo;
       $(editor).trigger(e);
@@ -105,7 +105,7 @@
   Editor.prototype = {
     insertChar : function(character) {
       insertChar(this, character);
-      $(this).trigger('s2e:contentsUpdate');
+      $(this).trigger('weee:contentsUpdate');
     },
 
     insertString : function(str) {
@@ -113,13 +113,13 @@
         var c = str.charAt(i);
         insertChar(this, c);
       }
-      $(this).trigger('s2e:contentsUpdate');
+      $(this).trigger('weee:contentsUpdate');
     },
 
     backspace : function() {
       if (this.presize > 0) {
         this.presize = this.presize - 1;
-        $(this).trigger('s2e:contentsUpdate');
+        $(this).trigger('weee:contentsUpdate');
       }
     },
 
@@ -300,5 +300,5 @@
     }
   };
 
-  $.fn.s2e.Editor = Editor;
+  $.fn.weee.Editor = Editor;
 })(jQuery);
